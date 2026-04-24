@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>MDAA · San Juan de Limay · Agenda Marzo - Mayo 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @property --border-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        :root {
+            --bg: #0a1220;
+            --bg-surface: #0f1a2e;
+            --card: rgba(255,255,255,0.035);
+            --card-hover: rgba(255,255,255,0.065);
+            --border: rgba(255,255,255,0.07);
+            --border-hover: rgba(212,165,23,0.5);
+            --navy: #1a3058;
+            --gold: #d4a517;
+            --gold-light: #f5d060;
+            --red: #d63031;
+            --green: #00b894;
+            --orange: #e17055;
+            --fg: #eaf0f6;
+            --fg-muted: #7a8fa3;
+            --fg-dim: #4a5d72;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--fg);
+            overflow-x: hidden;
+            padding: 1rem;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-1 {
+            width: 500px; height: 500px;
+            background: rgba(212,165,23,0.06);
+            top: -100px; right: -100px;
+            animation: floatGlow 20s ease-in-out infinite;
+        }
+        .glow-2 {
+            width: 400px; height: 400px;
+            background: rgba(26,48,88,0.15);
+            bottom: -50px; left: -100px;
+            animation: floatGlow 25s ease-in-out infinite reverse;
+        }
+        .glow-3 {
+            width: 300px; height: 300px;
+            background: rgba(214,48,49,0.04);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: floatGlow 18s ease-in-out infinite 5s;
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(30px, -20px); }
+            50% { transform: translate(-20px, 30px); }
+            75% { transform: translate(20px, 20px); }
+        }
+
+        .agenda-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .agenda-border {
+            position: relative;
+            border-radius: 1.8rem;
+            padding: 2px;
+            background: conic-gradient(
+                from var(--border-angle),
+                var(--gold) 0%, var(--red) 15%, var(--navy) 30%,
+                transparent 50%, var(--navy) 70%, var(--gold) 85%, var(--red) 100%
+            );
+            animation: rotateBorder 8s linear infinite;
+        }
+
+        @keyframes rotateBorder { to { --border-angle: 360deg; } }
+
+        .agenda-inner {
+            background: var(--bg-surface);
+            border-radius: calc(1.8rem - 2px);
+            overflow: hidden;
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.2rem;
+            background: rgba(0,0,0,0.25);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+
+        .header-badge i { color: var(--gold); font-size: 0.6rem; }
+
+        .header-center {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--gold);
+            letter-spacing: 0.06em;
+        }
+
+        .hero {
+            padding: 2.5rem 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 200%; height: 100%;
+            background: radial-gradient(ellipse at center top, rgba(212,165,23,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-flag {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-flag span {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 40%, var(--gold) 70%, #ffffff 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            animation: shimmer 5s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: var(--fg-muted);
+        }
+
+        .hero-subtitle strong { color: var(--fg); font-weight: 600; }
+
+        .countdown-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .countdown-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--fg-dim);
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+
+        .countdown-label i { color: var(--orange); margin-right: 0.3rem; }
+
+        .countdown-next {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            color: var(--fg);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+
+        .countdown-unit {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.6rem 0.9rem;
+            min-width: 62px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .countdown-unit:hover { border-color: var(--gold); }
+
+        .countdown-number {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        .countdown-text {
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--fg-dim);
+            margin-top: 0.25rem;
+        }
+
+        .monitor-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            padding: 0.7rem 1rem;
+            background: rgba(212,165,23,0.04);
+            border-top: 1px solid rgba(212,165,23,0.12);
+            border-bottom: 1px solid rgba(212,165,23,0.12);
+            flex-wrap: wrap;
+        }
+
+        .monitor-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            background: rgba(212,165,23,0.08);
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            border: 1px solid rgba(212,165,23,0.15);
+        }
+
+        .monitor-chip i { font-size: 0.6rem; }
+
+        .filter-section { padding: 1.2rem 1.5rem 0; }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.25rem;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 0.5rem 0.6rem;
+            border: none;
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: var(--fg-muted);
+            text-align: center;
+        }
+
+        .filter-tab:hover { color: var(--fg); }
+        .filter-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+        .filter-tab.active {
+            background: var(--gold);
+            color: var(--bg);
+            box-shadow: 0 2px 12px rgba(212,165,23,0.3);
+        }
+
+        .timeline-section { padding: 1.5rem; }
+
+        .month-block { margin-bottom: 2rem; }
+
+        .month-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .month-icon {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .month-icon.marzo { background: linear-gradient(135deg, var(--green), #00a884); color: white; }
+        .month-icon.abril { background: linear-gradient(135deg, var(--orange), #d35d40); color: white; }
+        .month-icon.mayo { background: linear-gradient(135deg, #6c5ce7, #a855f7); color: white; }
+
+        .month-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .month-count { font-size: 0.7rem; color: var(--fg-dim); font-weight: 500; }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--green) 0%, var(--green) 85%, rgba(255,255,255,0.05) 100%);
+            border-radius: 2px;
+        }
+
+        .timeline.pending::before {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, var(--orange) 15%, var(--orange) 100%);
+        }
+
+        .timeline.mixed::before {
+            background: linear-gradient(to bottom, var(--green) 0%, var(--green) 48%, rgba(160,140,60,0.4) 52%, var(--orange) 56%, var(--orange) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2rem; top: 1.15rem;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            border: 3px solid;
+            background: var(--bg-surface);
+            z-index: 2;
+        }
+
+        .timeline-dot.realizado {
+            border-color: var(--green);
+            background: var(--green);
+        }
+
+        .timeline-dot.realizado::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5px; height: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .timeline-dot.pendiente {
+            border-color: var(--orange);
+            background: transparent;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(225,112,85,0.4); }
+            50% { box-shadow: 0 0 0 7px rgba(225,112,85,0); }
+        }
+
+        .event-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1rem 1.1rem;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::after {
+            content: 'VER DETALLES';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(212,165,23,0.15));
+            color: var(--gold);
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-align: center;
+            padding: 1.5rem 0 0.4rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .event-card:hover::after { opacity: 1; }
+
+        .event-card:hover {
+            background: var(--card-hover);
+            border-color: var(--border-hover);
+            transform: translateX(5px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.25), -4px 0 0 var(--gold);
+        }
+
+        .event-card.realizada:hover {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.25), -4px 0 0 var(--green);
+            border-color: rgba(0,184,148,0.4);
+        }
+
+        .event-card.realizada:hover::after { color: var(--green); background: linear-gradient(transparent, rgba(0,184,148,0.12)); }
+
+        .event-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.55rem;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .event-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--fg-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 0.2rem 0.65rem;
+            border-radius: 100px;
+        }
+
+        .event-date i { font-size: 0.55rem; color: var(--gold); }
+
+        .event-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.63rem;
+            font-weight: 700;
+            padding: 0.2rem 0.65rem;
+            border-radius: 100px;
+            letter-spacing: 0.02em;
+        }
+
+        .status-done {
+            background: rgba(0,184,148,0.1);
+            color: var(--green);
+            border: 1px solid rgba(0,184,148,0.18);
+        }
+
+        .status-pending {
+            background: rgba(225,112,85,0.1);
+            color: var(--orange);
+            border: 1px solid rgba(225,112,85,0.18);
+        }
+
+        .event-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--fg);
+            line-height: 1.4;
+            margin-bottom: 0.45rem;
+        }
+
+        .event-title .sport-icon {
+            margin-right: 0.3rem;
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
+
+        .event-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.8rem;
+        }
+
+        .event-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.72rem;
+            color: var(--fg-muted);
+        }
+
+        .event-detail i {
+            font-size: 0.6rem;
+            color: var(--fg-dim);
+            width: 13px;
+            text-align: center;
+        }
+
+        .event-detail.highlight {
+            color: var(--gold-light);
+            background: rgba(212,165,23,0.07);
+            padding: 0.15rem 0.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .event-detail.highlight i { color: var(--gold); }
+
+        .event-detail.red-highlight {
+            color: #e07070;
+            background: rgba(214,48,49,0.07);
+            padding: 0.15rem 0.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .event-detail.red-highlight i { color: var(--red); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .modal-overlay.active {
+            pointer-events: all;
+            opacity: 1;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(5,10,20,0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .modal-panel {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            max-height: 92vh;
+            background: var(--bg-surface);
+            border-radius: 1.8rem 1.8rem 0 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transform: translateY(100%);
+            transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+            overscroll-behavior: contain;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-bottom: none;
+        }
+
+        .modal-overlay.active .modal-panel {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.8rem 1.2rem 0.6rem;
+            background: linear-gradient(var(--bg-surface) 70%, transparent);
+        }
+
+        .modal-handle-bar {
+            width: 40px; height: 4px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.15);
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .modal-close-btn {
+            align-self: flex-end;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: var(--fg-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(214,48,49,0.15);
+            border-color: rgba(214,48,49,0.3);
+            color: var(--red);
+        }
+
+        .modal-close-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+        .modal-body { padding: 0 1.5rem 2rem; }
+
+        .modal-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .modal-event-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--fg-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 0.35rem 0.85rem;
+            border-radius: 100px;
+        }
+
+        .modal-event-date i { color: var(--gold); font-size: 0.65rem; }
+
+        .modal-event-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--fg);
+            line-height: 1.35;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-info-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 0.9rem;
+            padding: 0.7rem 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .modal-info-item.full { grid-column: 1 / -1; }
+
+        .modal-info-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            background: rgba(212,165,23,0.08);
+            color: var(--gold);
+        }
+
+        .modal-info-icon.red { background: rgba(214,48,49,0.1); color: var(--red); }
+
+        .modal-info-label {
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--fg-dim);
+            margin-bottom: 0.1rem;
+        }
+
+        .modal-info-value {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--fg);
+            line-height: 1.35;
+        }
+
+        .modal-desc-section { margin-bottom: 1.8rem; }
+
+        .modal-section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--fg);
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .modal-section-title i { color: var(--gold); font-size: 0.75rem; }
+
+        .modal-desc-text {
+            font-size: 0.85rem;
+            color: var(--fg-muted);
+            line-height: 1.7;
+        }
+
+        .modal-gallery-section { margin-bottom: 1rem; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 0.9rem;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:first-child {
+            grid-column: 1 / -1;
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--gold);
+            transform: scale(1.015);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img { transform: scale(1.06); }
+
+        .gallery-item .gallery-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 1.8rem 0.6rem 0.45rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.75));
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 0.02em;
+        }
+
+        .gallery-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border: 2px dashed rgba(255,255,255,0.08);
+            border-radius: 1rem;
+        }
+
+        .gallery-empty i {
+            font-size: 2rem;
+            color: var(--fg-dim);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .gallery-empty p {
+            font-size: 0.78rem;
+            color: var(--fg-dim);
+            line-height: 1.5;
+        }
+
+        .gallery-empty p strong { color: var(--fg-muted); }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-overlay img {
+            max-width: 94%;
+            max-height: 88vh;
+            border-radius: 1rem;
+            object-fit: contain;
+            transform: scale(0.9);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .lightbox-overlay.active img { transform: scale(1); }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+        }
+
+        .lightbox-close:hover { background: rgba(255,255,255,0.15); }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.5);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            white-space: nowrap;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Stats */
+        .stats-section { padding: 0 1.5rem 1.5rem; }
+
+        .stats-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .stats-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-header h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .stats-header p { font-size: 0.72rem; color: var(--fg-dim); margin-top: 0.15rem; }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .progress-ring-wrapper {
+            position: relative;
+            width: 105px; height: 105px;
+            flex-shrink: 0;
+        }
+
+        .progress-ring { transform: rotate(-90deg); }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.06);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#goldGrad);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251.327;
+            stroke-dashoffset: 251.327;
+            transition: stroke-dashoffset 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .progress-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percent {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 0.52rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 0.15rem;
+        }
+
+        .stat-cards { display: flex; flex-direction: column; gap: 0.55rem; }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 0.8rem;
+            padding: 0.55rem 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 155px;
+            transition: border-color 0.3s;
+        }
+
+        .stat-card:hover { border-color: rgba(255,255,255,0.12); }
+
+        .stat-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.green { background: rgba(0,184,148,0.1); color: var(--green); }
+        .stat-icon.orange { background: rgba(225,112,85,0.1); color: var(--orange); }
+        .stat-icon.navy { background: rgba(106,159,216,0.1); color: #6a9fd8; }
+
+        .stat-info { display: flex; flex-direction: column; }
+
+        .stat-number {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .stat-text {
+            font-size: 0.62rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Conmemoraciones */
+        .conmem-section { padding: 0 1.5rem 1.5rem; }
+
+        .conmem-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conmem-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+        }
+
+        .conmem-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .conmem-title i { color: var(--red); margin-right: 0.3rem; }
+
+        .conmem-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            justify-content: center;
+        }
+
+        .conmem-chip {
+            background: rgba(214,48,49,0.05);
+            border: 1px solid rgba(214,48,49,0.1);
+            padding: 0.3rem 0.65rem;
+            border-radius: 100px;
+            font-size: 0.66rem;
+            font-weight: 500;
+            color: #d07070;
+            transition: all 0.3s ease;
+        }
+
+        .conmem-chip:hover {
+            background: rgba(214,48,49,0.12);
+            border-color: rgba(214,48,49,0.25);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: rgba(0,0,0,0.3);
+            border-top: 2px solid var(--gold);
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-main {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .footer-sub {
+            font-size: 0.65rem;
+            color: var(--fg-dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .footer-stars {
+            margin-top: 0.5rem;
+            color: var(--gold);
+            font-size: 0.5rem;
+            letter-spacing: 0.3em;
+            opacity: 0.5;
+        }
+
+        .hidden-event { display: none !important; }
+
+        .modal-panel::-webkit-scrollbar { width: 4px; }
+        .modal-panel::-webkit-scrollbar-track { background: transparent; }
+        .modal-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .agenda-border, .timeline-dot.pendiente, .ambient-glow, .hero h1 { animation: none; }
+            .timeline-item { opacity: 1; transform: none; transition: none; }
+            .progress-ring-fill { transition: none; }
+            #particles-canvas { display: none; }
+            .modal-panel, .modal-overlay { transition: none; }
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 0.4rem; }
+            .hero { padding: 1.8rem 1rem 1.5rem; }
+            .countdown-timer { gap: 0.4rem; }
+            .countdown-unit { min-width: 54px; padding: 0.45rem 0.5rem; }
+            .countdown-number { font-size: 1.2rem; }
+            .filter-section, .timeline-section, .stats-section, .conmem-section { padding-left: 1rem; padding-right: 1rem; }
+            .stats-grid { gap: 1rem; }
+            .event-card:hover { transform: none; box-shadow: none; }
+            .event-card:hover::after { opacity: 0; }
+            .header-center { font-size: 0.65rem; }
+            .header-badge { font-size: 0.62rem; padding: 0.25rem 0.6rem; }
+            .stat-card { min-width: 140px; }
+            .modal-info-grid { grid-template-columns: 1fr; }
+            .modal-event-title { font-size: 1.1rem; }
+            .modal-body { padding: 0 1rem 1.5rem; }
+            .gallery-grid { gap: 0.35rem; }
+        }
+
+        @media (min-width: 700px) {
+            .modal-overlay { align-items: center; }
+            .modal-panel {
+                border-radius: 1.8rem;
+                max-height: 85vh;
+                transform: translateY(30px) scale(0.97);
+            }
+            .modal-overlay.active .modal-panel { transform: translateY(0) scale(1); }
+            .modal-handle { padding: 0.6rem 1.5rem 0; }
+            .modal-handle-bar { display: none; }
+            .modal-close-btn { position: relative; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-1" aria-hidden="true"></div>
+    <div class="ambient-glow glow-2" aria-hidden="true"></div>
+    <div class="ambient-glow glow-3" aria-hidden="true"></div>
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="Detalle del evento">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-panel" id="modal-panel">
+            <div class="modal-handle">
+                <div class="modal-handle-bar"></div>
+                <button class="modal-close-btn" id="modal-close" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox-overlay" id="lightbox" aria-label="Imagen ampliada">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar imagen"><i class="fa-solid fa-xmark"></i></button>
+        <img id="lightbox-img" src="" alt="Foto ampliada">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <div class="agenda-wrapper">
+        <div class="agenda-border">
+            <div class="agenda-inner">
+                <header class="header-bar">
+                    <div class="header-badge"><i class="fa-solid fa-flag"></i> SANDINO</div>
+                    <div class="header-center">MDAA &middot; ALEXIS ARG&Uuml;ELLO</div>
+                    <div class="header-badge">PATRIA LIBRE <i class="fa-solid fa-bolt"></i></div>
+                </header>
+
+                <section class="hero">
+                    <div class="hero-flag" aria-hidden="true">
+                        <span style="background:#3a7bd5;"></span>
+                        <span style="background:#fff;"></span>
+                        <span style="background:#3a7bd5;"></span>
+                    </div>
+                    <h1>San Juan de Limay</h1>
+                    <p class="hero-subtitle">Calendario de Actividades &middot; <strong>Marzo - Mayo 2026</strong></p>
+                    <div class="countdown-section">
+                        <div class="countdown-label"><i class="fa-solid fa-clock"></i> PR&Oacute;XIMO EVENTO</div>
+                        <div class="countdown-next">Torneo de F&uacute;tbol Infantil</div>
+                        <div class="countdown-timer" aria-label="Cuenta regresiva al pr&oacute;ximo evento">
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="cd-days">---</div>
+                                <div class="countdown-text">D&iacute;as</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="cd-hours">--</div>
+                                <div class="countdown-text">Horas</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="cd-mins">--</div>
+                                <div class="countdown-text">Min</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <div class="countdown-number" id="cd-secs">--</div>
+                                <div class="countdown-text">Seg</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="monitor-bar">
+                    <span class="monitor-chip"><i class="fa-solid fa-user-check"></i> GREEG SANTOS VANEGAS T.</span>
+                    <span class="monitor-chip"><i class="fa-solid fa-handshake"></i> Juventud Sandinista</span>
+                </div>
+
+                <nav class="filter-section" aria-label="Filtrar eventos">
+                    <div class="filter-tabs" role="tablist">
+                        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">Todas (17)</button>
+                        <button class="filter-tab" data-filter="realizada" role="tab" aria-selected="false">Realizadas (11)</button>
+                        <button class="filter-tab" data-filter="pendiente" role="tab" aria-selected="false">En Espera (6)</button>
+                    </div>
+                </nav>
+
+                <main class="timeline-section">
+                    <!-- MARZO 2026 -->
+                    <div class="month-block" data-month="marzo">
+                        <div class="month-header">
+                            <div class="month-icon marzo"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div>
+                                <div class="month-title">Marzo 2026</div>
+                                <div class="month-count">7 actividades realizadas</div>
+                            </div>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item" data-status="realizada" data-id="1">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 15 Mar &middot; 10:10 AM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-baseball sport-icon"></i>Liga Mayor A: Condega vs San Juan de Limay</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Estadio Municipal Carlos Rodr&iacute;guez</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="2">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 22 Mar &middot; 10:00 AM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Inauguraci&oacute;n II Edici&oacute;n Liga Rural "Leonel Rugama"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha Las Ca&ntilde;as</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-trophy"></i> 8 equipos participantes</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="3">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Lun 23 Mar</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-chess sport-icon"></i>1er Torneo de Ajedrez "Por la Alfabetizaci&oacute;n"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Instituto Nacional Rub&eacute;n Dar&iacute;o</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-book"></i> Cruzada Nacional de Alfabetizaci&oacute;n</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="4">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 27 Mar &middot; 4:00 PM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Torneo Rel&aacute;mpago "Poeta y Guerrillero"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
+                                        <span class="event-detail"><i class="fa-solid fa-users"></i> 5 vs 5 &middot; Juvenil</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-star"></i> Natalicio Leonel Rugama</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="5">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>II Encuentro Liga Rural "Leonel Rugama"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha Las Ca&ntilde;as</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-trophy"></i> 8 equipos &middot; 2da jornada</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="6">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Liga Departamental 3ra Divisi&oacute;n</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Campo Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-trophy"></i> 8 equipos (4 por municipio)</span>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="timeline-item" data-status="realizada" data-id="7">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar &middot; 10:10 AM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-baseball sport-icon"></i>Liga Mayor A: Pueblo Nuevo vs San Juan de Limay</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Estadio Municipal Carlos Rodr&iacute;guez</span>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABRIL 2026 -->
+                    <div class="month-block" data-month="abril">
+                        <div class="month-header">
+                            <div class="month-icon abril"><i class="fa-solid fa-calendar-days"></i></div>
+                            <div>
+                                <div class="month-title">Abril 2026</div>
+                                <div class="month-count">4 realizadas &middot; 5 en espera</div>
+                            </div>
+                        </div>
+                        <div class="timeline mixed">
+
+                            <!-- Festival Acuático — REALIZADA -->
+                            <div class="timeline-item" data-status="realizada" data-id="8">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 3 Abr &middot; 10:00 AM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-umbrella-beach sport-icon"></i>Festival Acu&aacute;tico y de Playa</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Parque Acu&aacute;tico Vista al Tipiscayan</span>
+                                        <span class="event-detail"><i class="fa-solid fa-list"></i> Voleibol, f&uacute;tbol playa, cuerda, circuitos</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Fútbol Juvenil — REALIZADA -->
+                            <div class="timeline-item" data-status="realizada" data-id="9">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Mi&eacute; 9 Abr &middot; 3:00 PM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Torneo Rel&aacute;mpago F&uacute;tbol Juvenil (5 vs 5)</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Campo de F&uacute;tbol Municipal</span>
+                                        <span class="event-detail"><i class="fa-solid fa-user-group"></i> 15-20 a&ntilde;os &middot; Inscripci&oacute;n gratuita</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Ping Pong 16 Abr — REALIZADA -->
+                            <div class="timeline-item" data-status="realizada" data-id="14">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 16 Abr &middot; 2:00 PM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-table-tennis-paddle-ball sport-icon"></i>Torneo Rel&aacute;mpago de Ping Pong "Insurrecci&oacute;n de Abril"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-medal"></i> Semana 13-19 de Abril</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Boxeo — REALIZADA -->
+                            <div class="timeline-item" data-status="realizada" data-id="11">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 20 Abr &middot; 7:00 PM</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-hand-fist sport-icon"></i>Torneo Boxeo Amateur "El Flaco Explosivo"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-star"></i> Natalicio Alexis Arg&uuml;ello</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Fútbol Infantil 26 Abr -->
+                            <div class="timeline-item" data-status="pendiente" data-id="13">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> S&aacute;b 26 Abr &middot; 8:30 AM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Torneo de F&uacute;tbol Infantil</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-star"></i> Juan Alberto Bland&oacute;n "Froyl&aacute;n"</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Continuidad Liga Rural 26 Abr -->
+                            <div class="timeline-item" data-status="pendiente" data-id="15">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 26 Abr &middot; 9:00 AM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Continuidad de la Liga Rural de F&uacute;tbol Campo "Leonel Rugama"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha Las Ca&ntilde;as</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-trophy"></i> 8 equipos participantes</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Final Béisbol 26 Abr -->
+                            <div class="timeline-item" data-status="pendiente" data-id="16">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 26 Abr &middot; 9:00 AM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-baseball sport-icon"></i>Final de B&eacute;isbol (Liga Mayor A)</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Estadio Municipal Carlos Rodr&iacute;guez</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-trophy"></i> Gran Final del Campeonato</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Voleibol Mixto 30 Abr -->
+                            <div class="timeline-item" data-status="pendiente" data-id="17">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 30 Abr &middot; 2:00 PM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-volleyball sport-icon"></i>Torneo de Voleibol Mixto "Legado del Comandante"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Instituto Nacional Rub&eacute;n Dar&iacute;o</span>
+                                        <span class="event-detail"><i class="fa-solid fa-user-group"></i> Estudiantes turno tarde</span>
+                                        <span class="event-detail red-highlight"><i class="fa-solid fa-ribbon"></i> Comandante Tom&aacute;s Borge</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Exhibición Boxística 30 Abr -->
+                            <div class="timeline-item" data-status="pendiente" data-id="18">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 30 Abr &middot; 4:00 PM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-hand-fist sport-icon"></i>Exhibici&oacute;n Box&iacute;stica con J&oacute;venes del Municipio</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha Los Laureles</span>
+                                        <span class="event-detail red-highlight"><i class="fa-solid fa-ribbon"></i> Comandante Tom&aacute;s Borge</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- MAYO 2026 -->
+                    <div class="month-block" data-month="mayo">
+                        <div class="month-header">
+                            <div class="month-icon mayo"><i class="fa-solid fa-calendar-plus"></i></div>
+                            <div>
+                                <div class="month-title">Mayo 2026</div>
+                                <div class="month-count">1 actividad en espera</div>
+                            </div>
+                        </div>
+                        <div class="timeline pending">
+
+                            <!-- Copa Sandino — REPROGRAMADA AL 15 DE MAYO -->
+                            <div class="timeline-item" data-status="pendiente" data-id="10">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 15 May &middot; 6:00 PM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Inauguraci&oacute;n Liga F&uacute;tbol Sala 6ta Edici&oacute;n "Copa Sandino"</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-medal"></i> D&iacute;a Nacional del Deportista</span>
+                                    </div>
+                                </article>
+                            </div>
+
+                        </div>
+                    </div>
+                </main>
+
+                <section class="stats-section">
+                    <div class="stats-card">
+                        <div class="stats-header">
+                            <h3>Resumen de Actividades</h3>
+                            <p>Marzo - Mayo 2026</p>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="progress-ring-wrapper">
+                                <svg class="progress-ring" width="105" height="105" viewBox="0 0 105 105">
+                                    <defs>
+                                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#f5d060"/>
+                                            <stop offset="100%" stop-color="#d4a517"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="progress-ring-bg" cx="52.5" cy="52.5" r="40"/>
+                                    <circle class="progress-ring-fill" id="progress-fill" cx="52.5" cy="52.5" r="40"/>
+                                </svg>
+                                <div class="progress-center">
+                                    <div class="progress-percent" id="progress-percent">0%</div>
+                                    <div class="progress-label">Completado</div>
+                                </div>
+                            </div>
+                            <div class="stat-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon green"><i class="fa-solid fa-check"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" data-count="11">0</span>
+                                        <span class="stat-text">Realizadas</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon orange"><i class="fa-solid fa-hourglass-half"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" data-count="6">0</span>
+                                        <span class="stat-text">En Espera</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon navy"><i class="fa-solid fa-chart-simple"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" data-count="17">0</span>
+                                        <span class="stat-text">Total</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="conmem-section">
+                    <div class="conmem-card">
+                        <div class="conmem-title"><i class="fa-solid fa-ribbon"></i> Fechas Conmemorativas</div>
+                        <div class="conmem-list">
+                            <span class="conmem-chip">22 Mar &middot; Liga Rural "Leonel Rugama"</span>
+                            <span class="conmem-chip">23 Mar &middot; Ajedrez "Alfabetizaci&oacute;n"</span>
+                            <span class="conmem-chip">27 Mar &middot; Natalicio Leonel Rugama</span>
+                            <span class="conmem-chip">20 Abr &middot; Natalicio Alexis Arg&uuml;ello</span>
+                            <span class="conmem-chip">24 Abr &middot; Insurrecci&oacute;n Sandinista</span>
+                            <span class="conmem-chip">26 Abr &middot; Juan Alberto Bland&oacute;n</span>
+                            <span class="conmem-chip">30 Abr &middot; Comandante Tom&aacute;s Borge</span>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="footer">
+                    <div class="footer-main">MOVIMIENTO DEPORTIVO ALEXIS ARG&Uuml;ELLO</div>
+                    <div class="footer-sub">Deporte, Memoria y Victoria &middot; Marzo - Mayo 2026</div>
+                    <div class="footer-stars" aria-hidden="true">&starf; &starf; &starf;</div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================
+           BASE DE DATOS DE EVENTOS
+           ============================================ */
+        const eventosDB = {
+            1: {
+                titulo: 'Liga Mayor A: Condega vs San Juan de Limay',
+                fecha: 'Domingo 15 de Marzo, 2026 \u00b7 10:10 AM',
+                lugar: 'Estadio Municipal Carlos Rodr\u00edguez',
+                deporte: 'B\u00e9isbol',
+                status: 'realizada',
+                descripcion: 'Juego correspondiente a la Liga Mayor A de b\u00e9isbol del departamento de Estel\u00ed. San Juan de Limay recibi\u00f3 al cuadro de Condega en un partido lleno de emoci\u00f3n donde la afici\u00f3n local acompa\u00f1\u00f3 al equipo con gran entusiasmo. El encuentro form\u00f3 parte de la primera vuelta del campeonato departamental, demostrando el nivel competitivo de los peloteros limayenses.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/beisbol1a/800/450', caption: 'Vista general del estadio durante el partido' },
+                    { src: 'https://picsum.photos/seed/beisbol1b/800/450', caption: 'Lanzador de Limay en acci\u00f3n' },
+                    { src: 'https://picsum.photos/seed/beisbol1c/800/450', caption: 'Afici\u00f3n animando desde las gradas' }
+                ]
+            },
+            2: {
+                titulo: 'Inauguraci\u00f3n II Edici\u00f3n Liga Rural de F\u00fatbol Campo "Leonel Rugama"',
+                fecha: 'Domingo 22 de Marzo, 2026 \u00b7 10:00 AM',
+                lugar: 'Cancha Las Ca\u00f1as',
+                deporte: 'F\u00fatbol Campo',
+                status: 'realizada',
+                descripcion: 'Acto solemne de apertura de la segunda edici\u00f3n de la Liga Rural de F\u00fatbol Campo, bautizada en honor al m\u00e1rtir y poeta Leonel Rugama. 8 equipos de las comunidades rurales del municipio se dieron cita para disputar el campeonato que promueve el deporte como herramienta de integraci\u00f3n comunitaria. La ceremonia incluy\u00f3 palabras alusivas, el canto del Himno Nacional y el partido inaugural que arranc\u00f3 con todo.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/rural2a/800/450', caption: 'Formaci\u00f3n de equipos durante la inauguraci\u00f3n' },
+                    { src: 'https://picsum.photos/seed/rural2b/800/450', caption: 'Acci\u00f3n del partido inaugural en Las Ca\u00f1as' },
+                    { src: 'https://picsum.photos/seed/rural2c/800/450', caption: 'Comunidad presente apoyando a sus equipos' },
+                    { src: 'https://picsum.photos/seed/rural2d/800/450', caption: 'Entrega de bal\u00f3n oficial del torneo' }
+                ]
+            },
+            3: {
+                titulo: '1er Torneo de Ajedrez "Por la Alfabetizaci\u00f3n"',
+                fecha: 'Lunes 23 de Marzo, 2026',
+                lugar: 'Instituto Nacional Rub\u00e9n Dar\u00edo',
+                deporte: 'Ajedrez',
+                status: 'realizada',
+                descripcion: 'Celebrado en el marco de la Cruzada Nacional de Alfabetizaci\u00f3n, este torneo reuni\u00f3 a estudiantes del Instituto Nacional Rub\u00e9n Dar\u00edo en una jornada de ajedrez que combin\u00f3 la disciplina intelectual del deporte ciencia con el legado hist\u00f3rico de la educaci\u00f3n popular nicarag\u00fcense. Los participantes demostraron concentraci\u00f3n y estrategia en partidas que reflejaron el esp\u00edritu de superaci\u00f3n de la juventud limayense.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/ajedrez3a/800/450', caption: 'Jugadores concentrados durante sus partidas' },
+                    { src: 'https://picsum.photos/seed/ajedrez3b/800/450', caption: 'Vista panor\u00e1mica del sal\u00f3n de competencias' },
+                    { src: 'https://picsum.photos/seed/ajedrez3c/800/450', caption: 'Premiaci\u00f3n a los ganadores del torneo' }
+                ]
+            },
+            4: {
+                titulo: 'Torneo Rel\u00e1mpago de F\u00fatbol "Poeta y Guerrillero"',
+                fecha: 'Viernes 27 de Marzo, 2026 \u00b7 4:00 PM',
+                lugar: 'Cancha del Parque Municipal',
+                deporte: 'F\u00fatbol Sala (5 vs 5)',
+                status: 'realizada',
+                descripcion: 'En conmemoraci\u00f3n del natalicio del poeta y guerrillero Leonel Rugama, se realiz\u00f3 este torneo rel\u00e1mpago de f\u00fatbol 5 vs 5 en la categor\u00eda juvenil. El evento rindi\u00f3 homenaje al legado de Rugama, uni\u00e9ndose el deporte con la memoria hist\u00f3rica. Los equipos juveniles mostraron gran entrega en partidos de alta intensidad con duraci\u00f3n reducida, llenando el Parque Municipal de emoci\u00f3n.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/poeta4a/800/450', caption: 'Acci\u00f3n intensa en la cancha del Parque Municipal' },
+                    { src: 'https://picsum.photos/seed/poeta4b/800/450', caption: 'Equipos juveniles antes del inicio del torneo' },
+                    { src: 'https://picsum.photos/seed/poeta4c/800/450', caption: 'Gol celebrado por los jugadores' }
+                ]
+            },
+            5: {
+                titulo: 'II Encuentro Liga Rural de F\u00fatbol Campo "Leonel Rugama"',
+                fecha: 'Domingo 29 de Marzo, 2026',
+                lugar: 'Cancha Las Ca\u00f1as',
+                deporte: 'F\u00fatbol Campo',
+                status: 'realizada',
+                descripcion: 'Segunda jornada de la Liga Rural que mantuvo viva la competencia entre los 8 equipos participantes. Los enfrentamientos demostraron la mejora t\u00e1ctica de los cuadros rurales y la pasi\u00f3n con que las comunidades viven cada partido. La cancha de Las Ca\u00f1as volvi\u00f3 a ser el escenario donde se fortalecen los lazos comunitarios a trav\u00e9s del deporte.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/rural5a/800/450', caption: 'Uno de los partidos de la segunda jornada' },
+                    { src: 'https://picsum.photos/seed/rural5b/800/450', caption: 'Jugada colectiva de uno de los equipos rurales' },
+                    { src: 'https://picsum.photos/seed/rural5c/800/450', caption: 'P\u00fablico acompa\u00f1ando desde la l\u00ednea lateral' }
+                ]
+            },
+            6: {
+                titulo: 'Liga Departamental 3ra Divisi\u00f3n: Pueblo Nuevo vs San Juan de Limay',
+                fecha: 'Domingo 29 de Marzo, 2026',
+                lugar: 'Campo Municipal',
+                deporte: 'F\u00fatbol Campo',
+                status: 'realizada',
+                descripcion: 'San Juan de Limay se enfrent\u00f3 a Pueblo Nuevo en juego v\u00e1lido por la Liga Departamental de Tercera Divisi\u00f3n. Con 8 equipos en total (4 representantes por municipio), este campeonato es la vitrina del f\u00fatbol de base del territorio. El partido mostr\u00f3 la garra y el compromiso de los jugadores locales ante un rival departamental de peso.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/dept6a/800/450', caption: 'Alineaci\u00f3n de San Juan de Limay antes del partido' },
+                    { src: 'https://picsum.photos/seed/dept6b/800/450', caption: 'Jugada de ataque sobre el arco rival' },
+                    { src: 'https://picsum.photos/seed/dept6c/800/450', caption: 'Campo Municipal lleno para el cl\u00e1sico departamental' }
+                ]
+            },
+            7: {
+                titulo: 'Liga Mayor A: Pueblo Nuevo vs San Juan de Limay',
+                fecha: 'Domingo 29 de Marzo, 2026 \u00b7 10:10 AM',
+                lugar: 'Estadio Municipal Carlos Rodr\u00edguez',
+                deporte: 'B\u00e9isbol',
+                status: 'realizada',
+                descripcion: 'Segundo juego de la Liga Mayor A en la jornada dominical. Limay enfrent\u00f3 a Pueblo Nuevo en el Estadio Municipal Carlos Rodr\u00edguez, en un d\u00eda donde el estadio vivi\u00f3 una doble cartelera deportiva. Los peloteros locales mostraron su calidad en el diamante, manteniendo viva la tradici\u00f3n beisbolera del municipio.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/beisbol7a/800/450', caption: 'Lanzador ejecutando un pitch en el diamante' },
+                    { src: 'https://picsum.photos/seed/beisbol7b/800/450', caption: 'Bateador conectando un hit para Limay' },
+                    { src: 'https://picsum.photos/seed/beisbol7c/800/450', caption: 'Vista desde las gradas del Carlos Rodr\u00edguez' }
+                ]
+            },
+            8: {
+                titulo: 'Festival Acu\u00e1tico y de Playa',
+                fecha: 'Viernes 3 de Abril, 2026 \u00b7 10:00 AM',
+                lugar: 'Parque Acu\u00e1tico Vista al Tipiscayan',
+                deporte: 'Multideporte',
+                status: 'realizada',
+                descripcion: 'Festival multideportivo que incluy\u00f3 voleibol de playa, f\u00fatbol de playa, competencia de tirar la cuerda y circuitos acu\u00e1ticos recreativos. Un evento dise\u00f1ado para toda la familia en el hermoso entorno del Parque Acu\u00e1tico Vista al Tipiscayan, que aprovech\u00f3 los atractivos naturales del municipio para promover el deporte, la recreaci\u00f3n y el turismo local. La comunidad particip\u00f3 masivamente, disfrutando de una jornada llena de diversi\u00f3n y sana competencia.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/acuatico8a/800/450', caption: 'Vista general del Parque Acu\u00e1tico durante el festival' },
+                    { src: 'https://picsum.photos/seed/acuatico8b/800/450', caption: 'Partido de voleibol de playa en acci\u00f3n' },
+                    { src: 'https://picsum.photos/seed/acuatico8c/800/450', caption: 'Competencia de tirar la cuerda entre equipos' },
+                    { src: 'https://picsum.photos/seed/acuatico8d/800/450', caption: 'Participantes en los circuitos acu\u00e1ticos recreativos' }
+                ]
+            },
+            9: {
+                titulo: 'Torneo Rel\u00e1mpago de F\u00fatbol Juvenil (5 vs 5)',
+                fecha: 'Mi\u00e9rcoles 9 de Abril, 2026 \u00b7 3:00 PM',
+                lugar: 'Campo de F\u00fatbol Municipal',
+                deporte: 'F\u00fatbol Sala',
+                status: 'realizada',
+                descripcion: 'Torneo rel\u00e1mpago dirigido a j\u00f3venes de 15 a 20 a\u00f1os, con inscripci\u00f3n gratuita. El formato 5 vs 5 permiti\u00f3 partidos din\u00e1micos e intensos, ideales para descubrir nuevos talentos del f\u00fatbol local. La juventud limayense se expres\u00f3 a trav\u00e9s del deporte en una jornada llena de competitividad y camarader\u00eda.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/juvenil9a/800/450', caption: 'Jugadores en acci\u00f3n durante el torneo rel\u00e1mpago' },
+                    { src: 'https://picsum.photos/seed/juvenil9b/800/450', caption: 'Vista de la cancha durante los enfrentamientos' },
+                    { src: 'https://picsum.photos/seed/juvenil9c/800/450', caption: 'Momento del gol en uno de los partidos' }
+                ]
+            },
+            /* Copa Sandino — REPROGRAMADA AL 15 DE MAYO, PENDIENTE */
+            10: {
+                titulo: 'Inauguraci\u00f3n Liga F\u00fatbol Sala 6ta Edici\u00f3n "Copa Sandino"',
+                fecha: 'Viernes 15 de Mayo, 2026 \u00b7 6:00 PM',
+                lugar: 'Cancha del Parque Municipal',
+                deporte: 'F\u00fatbol Sala',
+                status: 'pendiente',
+                descripcion: 'Sexta edici\u00f3n de la liga de f\u00fatbol sala m\u00e1s tradicional de San Juan de Limay, bautizada "Copa Sandino" en honor al General de Hombres Libres. Originalmente programada para el D\u00eda Nacional del Deportista Nicarag\u00fcense (19 de abril), la inauguraci\u00f3n fue reprogramada al 15 de mayo. Esta competencia ya es referente del deporte municipal y se espera contar con la participaci\u00f3n de los mejores equipos de f\u00fatbol sala del territorio.',
+                fotos: []
+            },
+            11: {
+                titulo: 'Torneo de Boxeo Amateur "El Flaco Explosivo"',
+                fecha: 'Domingo 20 de Abril, 2026 \u00b7 7:00 PM',
+                lugar: 'Cancha del Parque Municipal',
+                deporte: 'Boxeo',
+                status: 'realizada',
+                descripcion: 'Torneo de boxeo amateur celebrado en conmemoraci\u00f3n del natalicio del gran campe\u00f3n mundial nicarag\u00fcense Alexis Arg\u00fcello "El Flaco Explosivo" (1952-2009). El evento mantuvo viva la tradici\u00f3n pugil\u00edstica del pa\u00eds y motiv\u00f3 a los j\u00f3venes a practicar este deporte de disciplina y valent\u00eda que dio gloria a Nicaragua. Las peleas mostraron el talento emergente del boxeo local.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/boxeo11a/800/450', caption: 'Peleadores en el ring durante el torneo' },
+                    { src: 'https://picsum.photos/seed/boxeo11b/800/450', caption: 'P\u00fablico en la cancha del Parque Municipal' },
+                    { src: 'https://picsum.photos/seed/boxeo11c/800/450', caption: 'Premiaci\u00f3n a los ganadores' }
+                ]
+            },
+            13: {
+                titulo: 'Torneo de F\u00fatbol Infantil',
+                fecha: 'S\u00e1bado 26 de Abril, 2026 \u00b7 8:30 AM',
+                lugar: 'Cancha del Parque Municipal',
+                deporte: 'F\u00fatbol',
+                status: 'pendiente',
+                descripcion: 'Torneo dedicado a la memoria de Juan Alberto Bland\u00f3n "Froyl\u00e1n", ca\u00eddo en combate en 1979 durante la lucha sandinista. Este evento infantil busca sembrar la semilla del deporte en los m\u00e1s peque\u00f1os, uniendo el juego con la memoria hist\u00f3rica para que las nuevas generaciones conozcan y honren a quienes entregaron su vida por la patria.',
+                fotos: []
+            },
+            14: {
+                titulo: 'Torneo Rel\u00e1mpago de Ping Pong "Insurrecci\u00f3n de Abril"',
+                fecha: 'Jueves 16 de Abril, 2026 \u00b7 2:00 PM',
+                lugar: 'Cancha del Parque Municipal',
+                deporte: 'Ping Pong',
+                status: 'realizada',
+                descripcion: 'Torneo rel\u00e1mpago de tenis de mesa programado dentro de la semana de actividades del 13 al 19 de abril del MDAA San Juan de Limay. Bajo el nombre "Insurrecci\u00f3n de Abril", el evento rindi\u00f3 homenaje a la gesta heroica del pueblo nicarag\u00fcense, utilizando el deporte como espacio de memoria y formaci\u00f3n para la juventud. Participaron jugadores de distintas edades en un formato de partidos r\u00e1pidos y eliminatorios.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/pingpong14a/800/450', caption: 'Jugadores en acci\u00f3n durante el torneo' },
+                    { src: 'https://picsum.photos/seed/pingpong14b/800/450', caption: 'Vista general de las mesas de competencias' },
+                    { src: 'https://picsum.photos/seed/pingpong14c/800/450', caption: 'Entrega de premios a los ganadores' }
+                ]
+            },
+            15: {
+                titulo: 'Continuidad de la Liga Rural de F\u00fatbol Campo "Leonel Rugama"',
+                fecha: 'Domingo 26 de Abril, 2026 \u00b7 9:00 AM',
+                lugar: 'Cancha Las Ca\u00f1as',
+                deporte: 'F\u00fatbol Campo',
+                status: 'pendiente',
+                descripcion: 'Nueva jornada de la II Edici\u00f3n de la Liga Rural de F\u00fatbol Campo "Leonel Rugama". Los 8 equipos de las comunidades rurales del municipio vuelven a las canchas de Las Ca\u00f1as para continuar con la competencia que fortalece los lazos comunitarios a trav\u00e9s del deporte. Un espacio donde las comunidades se encuentran, compiten y comparten en un ambiente de sana rivalidad.',
+                fotos: []
+            },
+            16: {
+                titulo: 'Final de B\u00e9isbol (Liga Mayor A)',
+                fecha: 'Domingo 26 de Abril, 2026 \u00b7 9:00 AM',
+                lugar: 'Estadio Municipal Carlos Rodr\u00edguez',
+                deporte: 'B\u00e9isbol',
+                status: 'pendiente',
+                descripcion: 'Gran final de la Liga Mayor A de b\u00e9isbol del departamento de Estel\u00ed. El Estadio Municipal Carlos Rodr\u00edguez ser\u00e1 el escenario donde se defina el campe\u00f3n de esta temporada. Se espera una gran asistencia de la afici\u00f3n limayense para apoyar al equipo local en el partido m\u00e1s importante del campeonato. Un momento de gran importancia para el deporte departamental.',
+                fotos: []
+            },
+            17: {
+                titulo: 'Torneo de Voleibol Mixto "Legado del Comandante"',
+                fecha: 'Jueves 30 de Abril, 2026 \u00b7 2:00 PM',
+                lugar: 'Cancha del Instituto Nacional Rub\u00e9n Dar\u00edo',
+                deporte: 'Voleibol',
+                status: 'pendiente',
+                conmemoracion: 'Aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge (30 de abril)',
+                descripcion: 'Torneo de voleibol mixto realizado en conmemoraci\u00f3n del aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge, fundador del Ministerio del Interior y figura clave de la Revoluci\u00f3n Popular Sandinista. Participan estudiantes del turno de la tarde del Instituto Nacional Rub\u00e9n Dar\u00edo, quienes a trav\u00e9s del deporte honran el legado de quien dedic\u00f3 su vida a la construcci\u00f3n de la nueva Nicaragua.',
+                fotos: []
+            },
+            18: {
+                titulo: 'Exhibici\u00f3n Box\u00edstica con J\u00f3venes del Municipio',
+                fecha: 'Jueves 30 de Abril, 2026 \u00b7 4:00 PM',
+                lugar: 'Cancha Los Laureles',
+                deporte: 'Boxeo',
+                status: 'pendiente',
+                conmemoracion: 'Aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge (30 de abril)',
+                descripcion: 'Exhibici\u00f3n box\u00edstica con la participaci\u00f3n de j\u00f3venes del municipio de San Juan de Limay, programada en el marco de las actividades de conmemoraci\u00f3n del Comandante Tom\u00e1s Borge. El evento busca proyectar el talento pugil\u00edstico de la juventud limayense en un nuevo espacio deportivo: la Cancha Los Laureles, fortaleciendo la presencia del boxeo en las comunidades.',
+                fotos: []
+            }
+        };
+
+        /* ============================================
+           PARTÍCULAS DORADAS
+           ============================================ */
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor(randomY) { this.reset(randomY); }
+            reset(randomY) {
+                this.x = Math.random() * canvas.width;
+                this.y = randomY ? Math.random() * canvas.height : canvas.height + Math.random() * 60;
+                this.size = Math.random() * 1.8 + 0.5;
+                this.speedY = -(Math.random() * 0.25 + 0.08);
+                this.speedX = (Math.random() - 0.5) * 0.15;
+                this.opacity = Math.random() * 0.35 + 0.08;
+                this.osc = Math.random() * Math.PI * 2;
+                this.oscSpeed = Math.random() * 0.015 + 0.005;
+                this.gold = Math.random() > 0.25;
+            }
+            update() {
+                this.osc += this.oscSpeed;
+                this.x += this.speedX + Math.sin(this.osc) * 0.25;
+                this.y += this.speedY;
+                if (this.y < -10) this.reset(false);
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2);
+                ctx.fillStyle = this.gold
+                    ? 'rgba(212,165,23,' + this.opacity + ')'
+                    : 'rgba(255,255,255,' + (this.opacity * 0.5) + ')';
+                ctx.fill();
+            }
+        }
+
+        const count = Math.min(55, Math.floor(window.innerWidth / 18));
+        for (let i = 0; i < count; i++) particles.push(new Particle(true));
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const p of particles) { p.update(); p.draw(); }
+            requestAnimationFrame(animateParticles);
+        }
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) animateParticles();
+
+        /* ============================================
+           CUENTA REGRESIVA — 26 de abril, 8:30 AM
+           ============================================ */
+        const targetDate = new Date('2026-04-26T08:30:00-06:00').getTime();
+
+        function updateCountdown() {
+            const diff = targetDate - Date.now();
+            if (diff <= 0) {
+                document.getElementById('cd-days').textContent = '0';
+                document.getElementById('cd-hours').textContent = '00';
+                document.getElementById('cd-mins').textContent = '00';
+                document.getElementById('cd-secs').textContent = '00';
+                return;
+            }
+            document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
+            document.getElementById('cd-hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('cd-mins').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('cd-secs').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        /* ============================================
+           REVELACIÓN AL SCROLL
+           ============================================ */
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const siblings = entry.target.parentElement.children;
+                    let idx = 0;
+                    for (let i = 0; i < siblings.length; i++) {
+                        if (siblings[i] === entry.target) { idx = i; break; }
+                    }
+                    setTimeout(() => entry.target.classList.add('visible'), idx * 70);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+        document.querySelectorAll('.timeline-item').forEach(el => revealObserver.observe(el));
+
+        /* ============================================
+           FILTROS
+           ============================================ */
+        const tabs = document.querySelectorAll('.filter-tab');
+        const monthBlocks = document.querySelectorAll('.month-block');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                const filter = tab.dataset.filter;
+
+                document.querySelectorAll('.timeline-item').forEach(item => {
+                    const match = filter === 'all' || item.dataset.status === filter;
+                    if (match) {
+                        item.classList.remove('hidden-event');
+                        item.classList.remove('visible');
+                        requestAnimationFrame(() => requestAnimationFrame(() => item.classList.add('visible')));
+                    } else {
+                        item.classList.add('hidden-event');
+                    }
+                });
+
+                monthBlocks.forEach(block => {
+                    const visibles = block.querySelectorAll('.timeline-item:not(.hidden-event)');
+                    block.style.display = visibles.length > 0 ? '' : 'none';
+                });
+            });
+        });
+
+        /* ============================================
+           MODAL DE DETALLE
+           ============================================ */
+        const modal = document.getElementById('modal');
+        const modalPanel = document.getElementById('modal-panel');
+        const modalBody = document.getElementById('modal-body');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalClose = document.getElementById('modal-close');
+        let lastScrollY = 0;
+
+        function openModal(id) {
+            const ev = eventosDB[id];
+            if (!ev) return;
+
+            lastScrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = '-' + lastScrollY + 'px';
+            document.body.style.width = '100%';
+
+            const isRealizada = ev.status === 'realizada';
+            const statusHTML = isRealizada
+                ? '<span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>'
+                : '<span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>';
+
+            let conmemHTML = '';
+            if (ev.conmemoracion) {
+                conmemHTML =
+                    '<div class="modal-desc-section" style="background:rgba(214,48,49,0.05);border:1px solid rgba(214,48,49,0.12);border-radius:1rem;padding:1rem 1.2rem;">' +
+                        '<div class="modal-section-title" style="color:#e07070;"><i class="fa-solid fa-ribbon" style="color:var(--red);"></i> Conmemoraci\u00f3n</div>' +
+                        '<p class="modal-desc-text" style="color:#d07070;font-weight:600;">' + ev.conmemoracion + '</p>' +
+                    '</div>';
+            }
+
+            let galleryHTML = '';
+            if (ev.fotos && ev.fotos.length > 0) {
+                let items = ev.fotos.map((f, i) => {
+                    const isFirst = i === 0 ? ' style="grid-column:1/-1;aspect-ratio:16/9;"' : '';
+                    return '<div class="gallery-item"' + isFirst + ' data-src="' + f.src + '" data-caption="' + f.caption + '">' +
+                        '<img src="' + f.src + '" alt="' + f.caption + '" loading="lazy">' +
+                        '<div class="gallery-caption">' + f.caption + '</div></div>';
+                }).join('');
+                galleryHTML = '<div class="modal-gallery-section"><div class="modal-section-title"><i class="fa-solid fa-images"></i> Galer\u00eda del Evento</div><div class="gallery-grid">' + items + '</div></div>';
+            } else {
+                galleryHTML = '<div class="modal-gallery-section"><div class="modal-section-title"><i class="fa-solid fa-images"></i> Fotograf\u00edas</div><div class="gallery-grid"><div class="gallery-empty"><i class="fa-regular fa-image"></i><p>Las fotograf\u00edas se agregar\u00e1n<br><strong>despu\u00e9s de realizado el evento</strong></p></div></div></div>';
+            }
+
+            modalBody.innerHTML =
+                '<div class="modal-status-bar">' +
+                    '<span class="modal-event-date"><i class="fa-regular fa-calendar"></i> ' + ev.fecha + '</span>' +
+                    statusHTML +
+                '</div>' +
+                '<h2 class="modal-event-title">' + ev.titulo + '</h2>' +
+                '<div class="modal-info-grid">' +
+                    '<div class="modal-info-item">' +
+                        '<div class="modal-info-icon"><i class="fa-solid fa-location-dot"></i></div>' +
+                        '<div><div class="modal-info-label">Lugar</div><div class="modal-info-value">' + ev.lugar + '</div></div>' +
+                    '</div>' +
+                    '<div class="modal-info-item">' +
+                        '<div class="modal-info-icon"><i class="fa-solid fa-medal"></i></div>' +
+                        '<div><div class="modal-info-label">Deporte</div><div class="modal-info-value">' + ev.deporte + '</div></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="modal-desc-section">' +
+                    '<div class="modal-section-title"><i class="fa-solid fa-align-left"></i> Descripci\u00f3n</div>' +
+                    '<p class="modal-desc-text">' + ev.descripcion + '</p>' +
+                '</div>' +
+                conmemHTML +
+                galleryHTML;
+
+            modal.classList.add('active');
+            modalPanel.scrollTop = 0;
+
+            setTimeout(() => {
+                modalBody.querySelectorAll('.gallery-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openLightbox(item.dataset.src, item.dataset.caption);
+                    });
+                });
+            }, 50);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, lastScrollY);
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', closeModal);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (lightbox.classList.contains('active')) closeLightbox();
+                else if (modal.classList.contains('active')) closeModal();
+            }
+        });
+
+        /* Swipe para cerrar en móvil */
+        let touchStartY = 0, touchCurrentY = 0, isSwiping = false;
+
+        modalPanel.addEventListener('touchstart', (e) => {
+            if (modalPanel.scrollTop <= 0) {
+                touchStartY = e.touches[0].clientY;
+                isSwiping = true;
+            }
+        }, { passive: true });
+
+        modalPanel.addEventListener('touchmove', (e) => {
+            if (!isSwiping) return;
+            touchCurrentY = e.touches[0].clientY;
+            const diff = touchCurrentY - touchStartY;
+            if (diff > 0 && modalPanel.scrollTop <= 0) {
+                modalPanel.style.transform = 'translateY(' + diff + 'px)';
+            }
+        }, { passive: true });
+
+        modalPanel.addEventListener('touchend', () => {
+            if (!isSwiping) return;
+            isSwiping = false;
+            const diff = touchCurrentY - touchStartY;
+            if (diff > 100) closeModal();
+            modalPanel.style.transform = '';
+            touchStartY = 0;
+            touchCurrentY = 0;
+        });
+
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const item = card.closest('.timeline-item');
+                if (item) openModal(item.dataset.id);
+            });
+        });
+
+        /* ============================================
+           LIGHTBOX
+           ============================================ */
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const lightboxCloseBtn = document.getElementById('lightbox-close');
+
+        function openLightbox(src, caption) {
+            lightboxImg.src = src;
+            lightboxImg.alt = caption;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            setTimeout(() => { lightboxImg.src = ''; }, 300);
+        }
+
+        lightboxCloseBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+        /* ============================================
+           ANIMACIÓN DE ESTADÍSTICAS (11/17 ≈ 65%)
+           ============================================ */
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { animateStats(); statsObserver.unobserve(entry.target); }
+            });
+        }, { threshold: 0.3 });
+
+        const statsCard = document.querySelector('.stats-card');
+        if (statsCard) statsObserver.observe(statsCard);
+
+        function animateStats() {
+            const circumference = 2 * Math.PI * 40;
+            const percent = 11 / 17;
+            const offset = circumference - (percent * circumference);
+
+            const fill = document.getElementById('progress-fill');
+            fill.style.strokeDasharray = circumference;
+            fill.style.strokeDashoffset = circumference;
+            fill.getBoundingClientRect();
+            fill.style.strokeDashoffset = offset;
+
+            animateValue(document.getElementById('progress-percent'), 0, Math.round(percent * 100), 1600, '%');
+            document.querySelectorAll('.stat-number[data-count]').forEach(el => {
+                animateValue(el, 0, parseInt(el.dataset.count), 1200);
+            });
+        }
+
+        function animateValue(el, start, end, duration, suffix) {
+            suffix = suffix || '';
+            const t0 = performance.now();
+            function tick(now) {
+                const p = Math.min((now - t0) / duration, 1);
+                const ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(start + (end - start) * ease) + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+    </script>
+</body>
+</html>
