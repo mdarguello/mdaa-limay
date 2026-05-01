@@ -12,23 +12,35 @@
             initial-value: 0deg;
             inherits: false;
         }
+        @property --shimmer-pos {
+            syntax: '<percentage>';
+            initial-value: 0%;
+            inherits: false;
+        }
 
         :root {
-            --bg: #0a1220;
-            --bg-surface: #0f1a2e;
-            --card: rgba(255,255,255,0.035);
-            --card-hover: rgba(255,255,255,0.065);
-            --border: rgba(255,255,255,0.07);
-            --border-hover: rgba(212,165,23,0.5);
+            --bg: #060d18;
+            --bg-surface: #0c1628;
+            --bg-elevated: #111f38;
+            --card: rgba(255,255,255,0.025);
+            --card-hover: rgba(255,255,255,0.055);
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(212,165,23,0.45);
             --navy: #1a3058;
+            --navy-light: #264a7a;
             --gold: #d4a517;
             --gold-light: #f5d060;
+            --gold-dim: #a07c10;
             --red: #d63031;
             --green: #00b894;
+            --green-dim: #009676;
             --orange: #e17055;
+            --purple: #a855f7;
             --fg: #eaf0f6;
             --fg-muted: #7a8fa3;
-            --fg-dim: #4a5d72;
+            --fg-dim: #3d5068;
+            --glass: rgba(12,22,40,0.7);
+            --glass-border: rgba(255,255,255,0.08);
         }
 
         *, *::before, *::after {
@@ -47,8 +59,128 @@
             color: var(--fg);
             overflow-x: hidden;
             padding: 1rem;
+            cursor: none;
         }
 
+        @media (max-width: 768px) { body { cursor: auto; } }
+
+        /* ===== PANTALLA DE CARGA ===== */
+        .loader-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .loader-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .loader-emblem {
+            width: 80px; height: 80px;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .loader-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .loader-ring:nth-child(1) {
+            border-top-color: var(--gold);
+            animation: loaderSpin 1.2s linear infinite;
+        }
+        .loader-ring:nth-child(2) {
+            inset: 8px;
+            border-right-color: var(--red);
+            animation: loaderSpin 1.6s linear infinite reverse;
+        }
+        .loader-ring:nth-child(3) {
+            inset: 16px;
+            border-bottom-color: var(--green);
+            animation: loaderSpin 2s linear infinite;
+        }
+        .loader-center-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--gold-light);
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+        .loader-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--fg-dim);
+        }
+        .loader-bar-track {
+            width: 200px;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            margin-top: 1.2rem;
+            overflow: hidden;
+        }
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold-light), var(--gold));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== CURSOR PERSONALIZADO ===== */
+        .custom-cursor {
+            position: fixed;
+            width: 20px; height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease, opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            opacity: 0;
+        }
+        .custom-cursor.visible { opacity: 1; }
+        .custom-cursor.hover {
+            transform: translate(-50%, -50%) scale(2.2);
+            background: rgba(212,165,23,0.12);
+            border-color: var(--gold-light);
+        }
+        .custom-cursor.click {
+            transform: translate(-50%, -50%) scale(0.7);
+        }
+        .cursor-dot {
+            position: fixed;
+            width: 5px; height: 5px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-dot.visible { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .custom-cursor, .cursor-dot { display: none !important; }
+        }
+
+        /* ===== FONDOS Y EFECTOS AMBIENTALES ===== */
         #particles-canvas {
             position: fixed;
             inset: 0;
@@ -58,143 +190,252 @@
             pointer-events: none;
         }
 
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
         .ambient-glow {
             position: fixed;
             border-radius: 50%;
-            filter: blur(120px);
+            filter: blur(140px);
             pointer-events: none;
             z-index: 0;
         }
         .glow-1 {
-            width: 500px; height: 500px;
-            background: rgba(212,165,23,0.06);
-            top: -100px; right: -100px;
-            animation: floatGlow 20s ease-in-out infinite;
+            width: 600px; height: 600px;
+            background: rgba(212,165,23,0.05);
+            top: -150px; right: -150px;
+            animation: floatGlow 22s ease-in-out infinite;
         }
         .glow-2 {
-            width: 400px; height: 400px;
-            background: rgba(26,48,88,0.15);
-            bottom: -50px; left: -100px;
-            animation: floatGlow 25s ease-in-out infinite reverse;
+            width: 500px; height: 500px;
+            background: rgba(26,48,88,0.12);
+            bottom: -100px; left: -150px;
+            animation: floatGlow 28s ease-in-out infinite reverse;
         }
         .glow-3 {
-            width: 300px; height: 300px;
-            background: rgba(214,48,49,0.04);
+            width: 350px; height: 350px;
+            background: rgba(214,48,49,0.03);
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            animation: floatGlow 18s ease-in-out infinite 5s;
+            animation: floatGlow 20s ease-in-out infinite 5s;
+        }
+        .glow-4 {
+            width: 250px; height: 250px;
+            background: rgba(0,184,148,0.03);
+            top: 30%; left: 10%;
+            animation: floatGlow 24s ease-in-out infinite 3s;
         }
 
         @keyframes floatGlow {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(30px, -20px); }
-            50% { transform: translate(-20px, 30px); }
-            75% { transform: translate(20px, 20px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(40px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 40px) scale(0.95); }
+            75% { transform: translate(30px, 25px) scale(1.05); }
         }
 
+        /* ===== GRID DE FONDO ===== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
         .agenda-wrapper {
             position: relative;
-            z-index: 1;
-            max-width: 780px;
+            z-index: 2;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .agenda-border {
             position: relative;
-            border-radius: 1.8rem;
+            border-radius: 2rem;
             padding: 2px;
             background: conic-gradient(
                 from var(--border-angle),
-                var(--gold) 0%, var(--red) 15%, var(--navy) 30%,
-                transparent 50%, var(--navy) 70%, var(--gold) 85%, var(--red) 100%
+                var(--gold) 0%, var(--red) 12%, var(--navy) 25%,
+                transparent 45%, var(--navy) 65%, var(--gold) 82%, var(--red) 95%, var(--gold) 100%
             );
-            animation: rotateBorder 8s linear infinite;
+            animation: rotateBorder 10s linear infinite;
+            box-shadow:
+                0 0 60px rgba(212,165,23,0.06),
+                0 0 120px rgba(212,165,23,0.03),
+                0 25px 80px rgba(0,0,0,0.5);
         }
 
         @keyframes rotateBorder { to { --border-angle: 360deg; } }
 
         .agenda-inner {
             background: var(--bg-surface);
-            border-radius: calc(1.8rem - 2px);
+            border-radius: calc(2rem - 2px);
             overflow: hidden;
+            position: relative;
         }
 
+        .agenda-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 300px;
+            background: linear-gradient(180deg, rgba(212,165,23,0.03) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== HEADER ===== */
         .header-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 1.2rem;
-            background: rgba(0,0,0,0.25);
+            padding: 0.8rem 1.3rem;
+            background: rgba(0,0,0,0.3);
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 0.5rem;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .header-badge {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.8rem;
+            gap: 0.45rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            padding: 0.3rem 0.85rem;
             border-radius: 100px;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 600;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.04em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
         }
-
-        .header-badge i { color: var(--gold); font-size: 0.6rem; }
+        .header-badge:hover {
+            background: rgba(212,165,23,0.08);
+            border-color: rgba(212,165,23,0.2);
+        }
+        .header-badge i { color: var(--gold); font-size: 0.58rem; }
 
         .header-center {
             font-family: 'Sora', sans-serif;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--gold);
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 20px rgba(212,165,23,0.3);
         }
 
+        /* ===== HERO ===== */
         .hero {
-            padding: 2.5rem 1.5rem 2rem;
+            padding: 3rem 2rem 2.2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: 0; left: 50%;
+            top: -50%; left: 50%;
             transform: translateX(-50%);
-            width: 200%; height: 100%;
-            background: radial-gradient(ellipse at center top, rgba(212,165,23,0.08) 0%, transparent 60%);
+            width: 300%; height: 200%;
+            background: radial-gradient(ellipse at center top, rgba(212,165,23,0.07) 0%, transparent 50%);
             pointer-events: none;
+        }
+
+        .hero-emblem {
+            width: 72px; height: 72px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-emblem-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(212,165,23,0.2);
+            animation: emblemPulse 4s ease-in-out infinite;
+        }
+        .hero-emblem-ring:nth-child(2) {
+            inset: -8px;
+            border-color: rgba(212,165,23,0.08);
+            animation-delay: 1s;
+        }
+        .hero-emblem-ring:nth-child(3) {
+            inset: -16px;
+            border-color: rgba(212,165,23,0.03);
+            animation-delay: 2s;
+        }
+
+        @keyframes emblemPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.5; }
+        }
+
+        .hero-emblem-icon {
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            filter: drop-shadow(0 0 12px rgba(212,165,23,0.4));
+            animation: emblemFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes emblemFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
 
         .hero-flag {
             display: flex;
             justify-content: center;
-            gap: 4px;
-            margin-bottom: 1.2rem;
+            gap: 5px;
+            margin-bottom: 1.3rem;
         }
-
         .hero-flag span {
-            width: 24px; height: 24px;
+            width: 28px; height: 28px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.08);
+            transition: all 0.4s ease;
+        }
+        .hero-flag span:hover {
+            transform: scale(1.2);
+            border-color: rgba(255,255,255,0.2);
         }
 
         .hero h1 {
             font-family: 'Sora', sans-serif;
-            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
             font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 40%, var(--gold) 70%, #ffffff 100%);
-            background-size: 200% 100%;
+            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 30%, var(--gold) 60%, #ffffff 80%, var(--gold-light) 100%);
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-            animation: shimmer 5s ease-in-out infinite;
+            line-height: 1.15;
+            margin-bottom: 0.6rem;
+            animation: shimmer 6s ease-in-out infinite;
+            filter: drop-shadow(0 2px 8px rgba(212,165,23,0.15));
         }
 
         @keyframes shimmer {
@@ -203,213 +444,280 @@
         }
 
         .hero-subtitle {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--fg-muted);
+            letter-spacing: 0.01em;
         }
-
-        .hero-subtitle strong { color: var(--fg); font-weight: 600; }
-
-        .countdown-section {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .countdown-label {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--fg-dim);
-            margin-bottom: 0.6rem;
+        .hero-subtitle strong {
+            color: var(--fg);
             font-weight: 600;
         }
 
+        /* ===== COUNTDOWN ===== */
+        .countdown-section {
+            margin-top: 2rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid var(--border);
+            position: relative;
+        }
+        .countdown-section::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 20%; right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+        }
+
+        .countdown-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--fg-dim);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
         .countdown-label i { color: var(--orange); margin-right: 0.3rem; }
 
         .countdown-next {
             font-family: 'Sora', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             color: var(--fg);
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 1.1rem;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
-            gap: 0.7rem;
+            gap: 0.6rem;
         }
 
         .countdown-unit {
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.025);
             border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 0.6rem 0.9rem;
-            min-width: 62px;
+            border-radius: 1.1rem;
+            padding: 0.7rem 1rem;
+            min-width: 68px;
             text-align: center;
-            transition: border-color 0.3s;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
         }
-
-        .countdown-unit:hover { border-color: var(--gold); }
+        .countdown-unit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,165,23,0.15), transparent);
+        }
+        .countdown-unit:hover {
+            border-color: var(--gold);
+            background: rgba(212,165,23,0.04);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2), 0 0 0 1px rgba(212,165,23,0.1);
+        }
 
         .countdown-number {
             font-family: 'Sora', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
-            color: var(--gold-light);
+            background: linear-gradient(180deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
         }
 
         .countdown-text {
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             color: var(--fg-dim);
-            margin-top: 0.25rem;
+            margin-top: 0.3rem;
+            font-weight: 500;
         }
 
+        /* ===== MONITOR BAR ===== */
         .monitor-bar {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.7rem;
-            padding: 0.7rem 1rem;
-            background: rgba(212,165,23,0.04);
-            border-top: 1px solid rgba(212,165,23,0.12);
-            border-bottom: 1px solid rgba(212,165,23,0.12);
+            gap: 0.6rem;
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, rgba(212,165,23,0.03) 0%, rgba(212,165,23,0.01) 100%);
+            border-top: 1px solid rgba(212,165,23,0.1);
+            border-bottom: 1px solid rgba(212,165,23,0.1);
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
 
         .monitor-chip {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            font-size: 0.68rem;
+            gap: 0.4rem;
+            font-size: 0.66rem;
             font-weight: 600;
             color: var(--gold-light);
-            background: rgba(212,165,23,0.08);
-            padding: 0.3rem 0.75rem;
+            background: rgba(212,165,23,0.06);
+            padding: 0.35rem 0.85rem;
             border-radius: 100px;
-            border: 1px solid rgba(212,165,23,0.15);
+            border: 1px solid rgba(212,165,23,0.12);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
         }
+        .monitor-chip:hover {
+            background: rgba(212,165,23,0.12);
+            border-color: rgba(212,165,23,0.25);
+            transform: translateY(-1px);
+        }
+        .monitor-chip i { font-size: 0.58rem; }
 
-        .monitor-chip i { font-size: 0.6rem; }
-
-        .filter-section { padding: 1.2rem 1.5rem 0; }
+        /* ===== FILTROS ===== */
+        .filter-section { padding: 1.3rem 1.5rem 0; position: relative; z-index: 1; }
 
         .filter-tabs {
             display: flex;
-            gap: 0.4rem;
-            background: rgba(255,255,255,0.03);
-            padding: 0.25rem;
+            gap: 0.35rem;
+            background: rgba(255,255,255,0.02);
+            padding: 0.3rem;
             border-radius: 100px;
             border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
         }
 
         .filter-tab {
             flex: 1;
-            padding: 0.5rem 0.6rem;
+            padding: 0.55rem 0.7rem;
             border: none;
             border-radius: 100px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            cursor: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             background: transparent;
             color: var(--fg-muted);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+        @media (max-width: 768px) { .filter-tab { cursor: pointer; } }
 
+        .filter-tab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(212,165,23,0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .filter-tab:hover::before { opacity: 1; }
         .filter-tab:hover { color: var(--fg); }
         .filter-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
         .filter-tab.active {
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
             color: var(--bg);
-            box-shadow: 0 2px 12px rgba(212,165,23,0.3);
+            box-shadow:
+                0 4px 20px rgba(212,165,23,0.3),
+                0 0 0 1px rgba(212,165,23,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.15);
         }
+        .filter-tab.active::before { opacity: 0; }
 
-        .timeline-section { padding: 1.5rem; }
+        /* ===== TIMELINE ===== */
+        .timeline-section { padding: 1.8rem 1.5rem; position: relative; z-index: 1; }
 
-        .month-block { margin-bottom: 2rem; }
+        .month-block { margin-bottom: 2.5rem; }
 
         .month-header {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
         }
 
         .month-icon {
-            width: 42px; height: 42px;
-            border-radius: 12px;
+            width: 48px; height: 48px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
         }
-
-        .month-icon.marzo { background: linear-gradient(135deg, var(--green), #00a884); color: white; }
-        .month-icon.abril { background: linear-gradient(135deg, var(--orange), #d35d40); color: white; }
-        .month-icon.mayo { background: linear-gradient(135deg, #6c5ce7, #a855f7); color: white; }
+        .month-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 17px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .month-icon.marzo { background: linear-gradient(135deg, var(--green), var(--green-dim)); color: white; }
+        .month-icon.abril { background: linear-gradient(135deg, var(--orange), #c0553a); color: white; }
+        .month-icon.mayo { background: linear-gradient(135deg, #7c3aed, var(--purple)); color: white; }
 
         .month-title {
             font-family: 'Sora', sans-serif;
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
-        .month-count { font-size: 0.7rem; color: var(--fg-dim); font-weight: 500; }
+        .month-count {
+            font-size: 0.7rem;
+            color: var(--fg-dim);
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
 
         .timeline {
             position: relative;
-            padding-left: 2rem;
+            padding-left: 2.2rem;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 7px; top: 0; bottom: 0;
+            left: 8px; top: 0; bottom: 0;
             width: 2px;
-            background: linear-gradient(to bottom, var(--green) 0%, var(--green) 85%, rgba(255,255,255,0.05) 100%);
+            background: linear-gradient(to bottom, var(--green) 0%, var(--green) 85%, rgba(255,255,255,0.03) 100%);
             border-radius: 2px;
         }
-
         .timeline.pending::before {
-            background: linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, var(--orange) 15%, var(--orange) 100%);
-        }
-
-        .timeline.mixed::before {
-            background: linear-gradient(to bottom, var(--green) 0%, var(--green) 48%, rgba(160,140,60,0.4) 52%, var(--orange) 56%, var(--orange) 100%);
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03) 0%, var(--orange) 15%, var(--orange) 100%);
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 0.9rem;
+            margin-bottom: 1rem;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(24px) translateX(-8px);
+            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
-        .timeline-item.visible { opacity: 1; transform: translateY(0); }
+        .timeline-item.visible { opacity: 1; transform: translateY(0) translateX(0); }
 
         .timeline-dot {
             position: absolute;
-            left: -2rem; top: 1.15rem;
-            width: 16px; height: 16px;
+            left: -2.2rem; top: 1.2rem;
+            width: 18px; height: 18px;
             border-radius: 50%;
             border: 3px solid;
             background: var(--bg-surface);
             z-index: 2;
+            transition: all 0.3s ease;
         }
 
         .timeline-dot.realizado {
             border-color: var(--green);
             background: var(--green);
+            box-shadow: 0 0 12px rgba(0,184,148,0.3);
         }
-
         .timeline-dot.realizado::after {
             content: '';
             position: absolute;
@@ -423,38 +731,69 @@
         .timeline-dot.pendiente {
             border-color: var(--orange);
             background: transparent;
-            animation: pulseDot 2s ease-in-out infinite;
+            animation: pulseDot 2.5s ease-in-out infinite;
         }
-
         @keyframes pulseDot {
             0%, 100% { box-shadow: 0 0 0 0 rgba(225,112,85,0.4); }
-            50% { box-shadow: 0 0 0 7px rgba(225,112,85,0); }
+            50% { box-shadow: 0 0 0 8px rgba(225,112,85,0); }
         }
 
+        /* ===== EVENT CARD ===== */
         .event-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 1rem 1.1rem;
-            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: pointer;
+            border-radius: 1.1rem;
+            padding: 1.1rem 1.2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: none;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(8px);
+            transform-style: preserve-3d;
+            perspective: 800px;
         }
+        @media (max-width: 768px) { .event-card { cursor: pointer; } }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .event-card .card-shine {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(212,165,23,0.04),
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .event-card:hover .card-shine { opacity: 1; }
+        .event-card:hover::before { opacity: 1; }
 
         .event-card::after {
             content: 'VER DETALLES';
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(212,165,23,0.15));
+            background: linear-gradient(transparent, rgba(212,165,23,0.12));
             color: var(--gold);
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             text-align: center;
-            padding: 1.5rem 0 0.4rem;
+            padding: 1.8rem 0 0.45rem;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
         }
 
         .event-card:hover::after { opacity: 1; }
@@ -462,22 +801,29 @@
         .event-card:hover {
             background: var(--card-hover);
             border-color: var(--border-hover);
-            transform: translateX(5px);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.25), -4px 0 0 var(--gold);
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.3),
+                -4px 0 0 var(--gold),
+                0 0 0 1px rgba(212,165,23,0.08);
         }
 
         .event-card.realizada:hover {
-            box-shadow: 0 4px 24px rgba(0,0,0,0.25), -4px 0 0 var(--green);
-            border-color: rgba(0,184,148,0.4);
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.3),
+                -4px 0 0 var(--green),
+                0 0 0 1px rgba(0,184,148,0.08);
+            border-color: rgba(0,184,148,0.35);
         }
-
-        .event-card.realizada:hover::after { color: var(--green); background: linear-gradient(transparent, rgba(0,184,148,0.12)); }
+        .event-card.realizada:hover::after {
+            color: var(--green);
+            background: linear-gradient(transparent, rgba(0,184,148,0.1));
+        }
 
         .event-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.55rem;
+            margin-bottom: 0.6rem;
             flex-wrap: wrap;
             gap: 0.4rem;
         }
@@ -485,38 +831,37 @@
         .event-date {
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.68rem;
+            gap: 0.35rem;
+            font-size: 0.66rem;
             font-weight: 600;
             color: var(--fg-muted);
-            background: rgba(255,255,255,0.05);
-            padding: 0.2rem 0.65rem;
+            background: rgba(255,255,255,0.04);
+            padding: 0.25rem 0.7rem;
             border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
-
-        .event-date i { font-size: 0.55rem; color: var(--gold); }
+        .event-date i { font-size: 0.52rem; color: var(--gold); }
 
         .event-status {
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: 0.2rem 0.65rem;
+            padding: 0.22rem 0.7rem;
             border-radius: 100px;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
         }
 
         .status-done {
-            background: rgba(0,184,148,0.1);
+            background: rgba(0,184,148,0.08);
             color: var(--green);
-            border: 1px solid rgba(0,184,148,0.18);
+            border: 1px solid rgba(0,184,148,0.15);
         }
-
         .status-pending {
-            background: rgba(225,112,85,0.1);
+            background: rgba(225,112,85,0.08);
             color: var(--orange);
-            border: 1px solid rgba(225,112,85,0.18);
+            border: 1px solid rgba(225,112,85,0.15);
         }
 
         .event-title {
@@ -525,31 +870,33 @@
             font-weight: 700;
             color: var(--fg);
             line-height: 1.4;
-            margin-bottom: 0.45rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
         }
-
         .event-title .sport-icon {
             margin-right: 0.3rem;
-            opacity: 0.7;
-            font-size: 0.8rem;
+            opacity: 0.6;
+            font-size: 0.78rem;
+            transition: opacity 0.3s ease;
         }
+        .event-card:hover .event-title .sport-icon { opacity: 1; }
+        .event-card.realizada:hover .event-title { color: var(--green); }
 
         .event-details {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem 0.8rem;
+            gap: 0.4rem 0.7rem;
         }
 
         .event-detail {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--fg-muted);
         }
-
         .event-detail i {
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             color: var(--fg-dim);
             width: 13px;
             text-align: center;
@@ -557,22 +904,22 @@
 
         .event-detail.highlight {
             color: var(--gold-light);
-            background: rgba(212,165,23,0.07);
-            padding: 0.15rem 0.5rem;
+            background: rgba(212,165,23,0.06);
+            padding: 0.18rem 0.55rem;
             border-radius: 100px;
             font-weight: 600;
+            border: 1px solid rgba(212,165,23,0.08);
         }
-
         .event-detail.highlight i { color: var(--gold); }
 
         .event-detail.red-highlight {
             color: #e07070;
-            background: rgba(214,48,49,0.07);
-            padding: 0.15rem 0.5rem;
+            background: rgba(214,48,49,0.06);
+            padding: 0.18rem 0.55rem;
             border-radius: 100px;
             font-weight: 600;
+            border: 1px solid rgba(214,48,49,0.08);
         }
-
         .event-detail.red-highlight i { color: var(--red); }
 
         /* ===== MODAL ===== */
@@ -585,9 +932,8 @@
             justify-content: center;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.35s ease;
+            transition: opacity 0.4s ease;
         }
-
         .modal-overlay.active {
             pointer-events: all;
             opacity: 1;
@@ -596,27 +942,26 @@
         .modal-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(5,10,20,0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(3,6,14,0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .modal-panel {
             position: relative;
             width: 100%;
-            max-width: 680px;
+            max-width: 700px;
             max-height: 92vh;
             background: var(--bg-surface);
-            border-radius: 1.8rem 1.8rem 0 0;
+            border-radius: 2rem 2rem 0 0;
             overflow-y: auto;
             overflow-x: hidden;
             transform: translateY(100%);
-            transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+            transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
             overscroll-behavior: contain;
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.05);
             border-bottom: none;
         }
-
         .modal-overlay.active .modal-panel {
             transform: translateY(0);
         }
@@ -628,42 +973,40 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0.8rem 1.2rem 0.6rem;
-            background: linear-gradient(var(--bg-surface) 70%, transparent);
+            padding: 0.8rem 1.3rem 0.6rem;
+            background: linear-gradient(var(--bg-surface) 75%, transparent);
         }
-
         .modal-handle-bar {
-            width: 40px; height: 4px;
+            width: 42px; height: 4px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.15);
-            margin-bottom: 0.5rem;
+            background: rgba(255,255,255,0.12);
+            margin-bottom: 0.6rem;
             flex-shrink: 0;
         }
-
         .modal-close-btn {
             align-self: flex-end;
-            width: 36px; height: 36px;
+            width: 38px; height: 38px;
             border-radius: 50%;
             border: 1px solid var(--border);
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
             color: var(--fg-muted);
             font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
         }
-
         .modal-close-btn:hover {
             background: rgba(214,48,49,0.15);
             border-color: rgba(214,48,49,0.3);
             color: var(--red);
+            transform: rotate(90deg);
         }
-
         .modal-close-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-        .modal-body { padding: 0 1.5rem 2rem; }
+        .modal-body { padding: 0 1.6rem 2.5rem; }
 
         .modal-status-bar {
             display: flex;
@@ -671,75 +1014,78 @@
             justify-content: space-between;
             margin-bottom: 1rem;
             flex-wrap: wrap;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
 
         .modal-event-date {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            font-size: 0.75rem;
+            gap: 0.4rem;
+            font-size: 0.73rem;
             font-weight: 600;
             color: var(--fg-muted);
-            background: rgba(255,255,255,0.05);
-            padding: 0.35rem 0.85rem;
+            background: rgba(255,255,255,0.04);
+            padding: 0.38rem 0.9rem;
             border-radius: 100px;
+            border: 1px solid var(--border);
         }
-
         .modal-event-date i { color: var(--gold); font-size: 0.65rem; }
 
         .modal-event-title {
             font-family: 'Sora', sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 800;
             color: var(--fg);
             line-height: 1.35;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.3rem;
+            letter-spacing: -0.01em;
         }
 
         .modal-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
-            margin-bottom: 1.5rem;
+            gap: 0.65rem;
+            margin-bottom: 1.6rem;
         }
 
         .modal-info-item {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.025);
             border: 1px solid var(--border);
-            border-radius: 0.9rem;
-            padding: 0.7rem 0.9rem;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
             display: flex;
             align-items: flex-start;
-            gap: 0.6rem;
+            gap: 0.7rem;
+            transition: all 0.3s ease;
         }
-
+        .modal-info-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.1);
+        }
         .modal-info-item.full { grid-column: 1 / -1; }
 
         .modal-info-icon {
-            width: 32px; height: 32px;
-            border-radius: 8px;
+            width: 36px; height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             flex-shrink: 0;
             background: rgba(212,165,23,0.08);
             color: var(--gold);
         }
-
         .modal-info-icon.red { background: rgba(214,48,49,0.1); color: var(--red); }
 
         .modal-info-label {
-            font-size: 0.58rem;
+            font-size: 0.56rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             color: var(--fg-dim);
-            margin-bottom: 0.1rem;
+            margin-bottom: 0.15rem;
         }
-
         .modal-info-value {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: var(--fg);
             line-height: 1.35;
@@ -752,140 +1098,129 @@
             font-size: 0.85rem;
             font-weight: 700;
             color: var(--fg);
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.45rem;
         }
-
         .modal-section-title i { color: var(--gold); font-size: 0.75rem; }
 
         .modal-desc-text {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--fg-muted);
-            line-height: 1.7;
+            line-height: 1.75;
         }
 
-        .modal-gallery-section { margin-bottom: 1rem; }
+        .modal-gallery-section { margin-bottom: 1.2rem; }
 
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
+            gap: 0.55rem;
         }
-
         .gallery-item {
             position: relative;
-            border-radius: 0.9rem;
+            border-radius: 1rem;
             overflow: hidden;
             aspect-ratio: 4/3;
             cursor: pointer;
             border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
         .gallery-item:first-child {
             grid-column: 1 / -1;
             aspect-ratio: 16/9;
         }
-
         .gallery-item:hover {
             border-color: var(--gold);
-            transform: scale(1.015);
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
-
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
-        .gallery-item:hover img { transform: scale(1.06); }
-
+        .gallery-item:hover img { transform: scale(1.08); }
         .gallery-item .gallery-caption {
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            padding: 1.8rem 0.6rem 0.45rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.75));
-            font-size: 0.62rem;
+            padding: 2rem 0.7rem 0.5rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-size: 0.64rem;
             font-weight: 600;
-            color: rgba(255,255,255,0.85);
+            color: rgba(255,255,255,0.9);
             letter-spacing: 0.02em;
         }
 
         .gallery-empty {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 2.5rem 1rem;
-            border: 2px dashed rgba(255,255,255,0.08);
-            border-radius: 1rem;
+            padding: 3rem 1rem;
+            border: 2px dashed rgba(255,255,255,0.06);
+            border-radius: 1.2rem;
         }
-
         .gallery-empty i {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--fg-dim);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.7rem;
             display: block;
         }
-
         .gallery-empty p {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--fg-dim);
             line-height: 1.5;
         }
-
         .gallery-empty p strong { color: var(--fg-muted); }
 
-        /* Lightbox */
+        /* ===== LIGHTBOX ===== */
         .lightbox-overlay {
             position: fixed;
             inset: 0;
             z-index: 1100;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.96);
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.35s ease;
+            backdrop-filter: blur(20px);
         }
-
-        .lightbox-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+        .lightbox-overlay.active { opacity: 1; pointer-events: all; }
         .lightbox-overlay img {
             max-width: 94%;
             max-height: 88vh;
-            border-radius: 1rem;
+            border-radius: 1.2rem;
             object-fit: contain;
-            transform: scale(0.9);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            transform: scale(0.85);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 20px 80px rgba(0,0,0,0.5);
         }
-
         .lightbox-overlay.active img { transform: scale(1); }
-
         .lightbox-close {
             position: absolute;
             top: 1rem; right: 1rem;
-            width: 44px; height: 44px;
+            width: 48px; height: 48px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
             color: white;
             font-size: 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
         }
-
-        .lightbox-close:hover { background: rgba(255,255,255,0.15); }
-
+        .lightbox-close:hover {
+            background: rgba(214,48,49,0.2);
+            border-color: rgba(214,48,49,0.4);
+            transform: rotate(90deg);
+        }
         .lightbox-caption {
             position: absolute;
             bottom: 1.5rem;
@@ -894,26 +1229,28 @@
             font-size: 0.8rem;
             color: rgba(255,255,255,0.7);
             background: rgba(0,0,0,0.5);
-            padding: 0.4rem 1rem;
+            padding: 0.45rem 1.2rem;
             border-radius: 100px;
             white-space: nowrap;
             max-width: 90%;
             overflow: hidden;
             text-overflow: ellipsis;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
-        /* Stats */
-        .stats-section { padding: 0 1.5rem 1.5rem; }
+        /* ===== STATS ===== */
+        .stats-section { padding: 0 1.5rem 1.8rem; position: relative; z-index: 1; }
 
         .stats-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 1.2rem;
-            padding: 1.5rem;
+            border-radius: 1.4rem;
+            padding: 1.8rem;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(8px);
         }
-
         .stats-card::before {
             content: '';
             position: absolute;
@@ -921,42 +1258,44 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
+        .stats-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+        }
 
         .stats-header {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
-
         .stats-header h3 {
             font-family: 'Sora', sans-serif;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
         }
-
-        .stats-header p { font-size: 0.72rem; color: var(--fg-dim); margin-top: 0.15rem; }
+        .stats-header p { font-size: 0.72rem; color: var(--fg-dim); margin-top: 0.2rem; }
 
         .stats-grid {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1.5rem;
+            gap: 2rem;
             flex-wrap: wrap;
         }
 
         .progress-ring-wrapper {
             position: relative;
-            width: 105px; height: 105px;
+            width: 115px; height: 115px;
             flex-shrink: 0;
         }
-
         .progress-ring { transform: rotate(-90deg); }
-
         .progress-ring-bg {
             fill: none;
-            stroke: rgba(255,255,255,0.06);
+            stroke: rgba(255,255,255,0.04);
             stroke-width: 8;
         }
-
         .progress-ring-fill {
             fill: none;
             stroke: url(#goldGrad);
@@ -964,90 +1303,105 @@
             stroke-linecap: round;
             stroke-dasharray: 251.327;
             stroke-dashoffset: 251.327;
-            transition: stroke-dashoffset 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: drop-shadow(0 0 6px rgba(212,165,23,0.3));
         }
-
         .progress-center {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
         }
-
         .progress-percent {
             font-family: 'Sora', sans-serif;
-            font-size: 1.35rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--gold-light);
+            background: linear-gradient(180deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
         }
-
         .progress-label {
-            font-size: 0.52rem;
+            font-size: 0.5rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.2rem;
+        }
+
+        .stat-cards { display: flex; flex-direction: column; gap: 0.6rem; }
+
+        .stat-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.65rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 165px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 2px;
+            border-radius: 2px;
+        }
+        .stat-card:nth-child(1)::before { background: var(--green); }
+        .stat-card:nth-child(2)::before { background: var(--orange); }
+        .stat-card:nth-child(3)::before { background: var(--navy-light); }
+
+        .stat-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateX(4px);
+        }
+
+        .stat-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .stat-icon.green { background: rgba(0,184,148,0.08); color: var(--green); }
+        .stat-icon.orange { background: rgba(225,112,85,0.08); color: var(--orange); }
+        .stat-icon.navy { background: rgba(106,159,216,0.08); color: #6a9fd8; }
+
+        .stat-info { display: flex; flex-direction: column; }
+        .stat-number {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .stat-text {
+            font-size: 0.6rem;
             color: var(--fg-dim);
             text-transform: uppercase;
             letter-spacing: 0.06em;
             margin-top: 0.15rem;
         }
 
-        .stat-cards { display: flex; flex-direction: column; gap: 0.55rem; }
-
-        .stat-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 0.8rem;
-            padding: 0.55rem 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            min-width: 155px;
-            transition: border-color 0.3s;
-        }
-
-        .stat-card:hover { border-color: rgba(255,255,255,0.12); }
-
-        .stat-icon {
-            width: 36px; height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-        }
-
-        .stat-icon.green { background: rgba(0,184,148,0.1); color: var(--green); }
-        .stat-icon.orange { background: rgba(225,112,85,0.1); color: var(--orange); }
-        .stat-icon.navy { background: rgba(106,159,216,0.1); color: #6a9fd8; }
-
-        .stat-info { display: flex; flex-direction: column; }
-
-        .stat-number {
-            font-family: 'Sora', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .stat-text {
-            font-size: 0.62rem;
-            color: var(--fg-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Conmemoraciones */
-        .conmem-section { padding: 0 1.5rem 1.5rem; }
+        /* ===== CONMEMORATIVAS ===== */
+        .conmem-section { padding: 0 1.5rem 1.8rem; position: relative; z-index: 1; }
 
         .conmem-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 1.2rem;
-            padding: 1.2rem;
+            border-radius: 1.4rem;
+            padding: 1.4rem;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(8px);
         }
-
         .conmem-card::after {
             content: '';
             position: absolute;
@@ -1058,123 +1412,235 @@
 
         .conmem-title {
             font-family: 'Sora', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.1rem;
         }
-
-        .conmem-title i { color: var(--red); margin-right: 0.3rem; }
+        .conmem-title i { color: var(--red); margin-right: 0.35rem; }
 
         .conmem-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.45rem;
+            gap: 0.5rem;
             justify-content: center;
         }
-
         .conmem-chip {
-            background: rgba(214,48,49,0.05);
-            border: 1px solid rgba(214,48,49,0.1);
-            padding: 0.3rem 0.65rem;
+            background: rgba(214,48,49,0.04);
+            border: 1px solid rgba(214,48,49,0.08);
+            padding: 0.35rem 0.75rem;
             border-radius: 100px;
-            font-size: 0.66rem;
+            font-size: 0.65rem;
             font-weight: 500;
-            color: #d07070;
-            transition: all 0.3s ease;
+            color: #c06868;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
         .conmem-chip:hover {
-            background: rgba(214,48,49,0.12);
-            border-color: rgba(214,48,49,0.25);
-            transform: translateY(-2px);
+            background: rgba(214,48,49,0.1);
+            border-color: rgba(214,48,49,0.22);
+            color: #e08080;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(214,48,49,0.1);
         }
 
+        /* ===== FOOTER ===== */
         .footer {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.35);
             border-top: 2px solid var(--gold);
-            padding: 1.2rem 1.5rem;
+            padding: 1.5rem 1.5rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 0; right: 0;
+            height: 40px;
+            background: linear-gradient(180deg, rgba(212,165,23,0.06), transparent);
+            pointer-events: none;
         }
 
         .footer-main {
             font-family: 'Sora', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--gold);
-            letter-spacing: 0.05em;
-            margin-bottom: 0.3rem;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.35rem;
+            text-shadow: 0 0 20px rgba(212,165,23,0.2);
         }
-
         .footer-sub {
             font-size: 0.65rem;
             color: var(--fg-dim);
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-
         .footer-stars {
-            margin-top: 0.5rem;
+            margin-top: 0.6rem;
             color: var(--gold);
             font-size: 0.5rem;
-            letter-spacing: 0.3em;
-            opacity: 0.5;
+            letter-spacing: 0.4em;
+            opacity: 0.35;
         }
 
+        /* ===== UTILIDADES ===== */
         .hidden-event { display: none !important; }
 
-        .modal-panel::-webkit-scrollbar { width: 4px; }
+        .modal-panel::-webkit-scrollbar { width: 5px; }
         .modal-panel::-webkit-scrollbar-track { background: transparent; }
-        .modal-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .modal-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 5px; }
+        .modal-panel::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 0.8rem 1.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--fg);
+            z-index: 500;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .toast i { color: var(--gold); }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--gold);
+            font-size: 0.9rem;
+            z-index: 50;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .scroll-top-btn:hover {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+            box-shadow: 0 4px 24px rgba(212,165,23,0.3);
+        }
+
+        /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
-            .agenda-border, .timeline-dot.pendiente, .ambient-glow, .hero h1 { animation: none; }
+            .agenda-border, .timeline-dot.pendiente, .ambient-glow, .hero h1,
+            .hero-emblem-ring, .hero-emblem-icon, .loader-ring { animation: none; }
             .timeline-item { opacity: 1; transform: none; transition: none; }
             .progress-ring-fill { transition: none; }
             #particles-canvas { display: none; }
             .modal-panel, .modal-overlay { transition: none; }
+            .loader-screen { display: none; }
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 520px) {
-            body { padding: 0.4rem; }
-            .hero { padding: 1.8rem 1rem 1.5rem; }
+            body { padding: 0.3rem; }
+            .hero { padding: 2rem 1.2rem 1.5rem; }
+            .hero-emblem { width: 60px; height: 60px; }
+            .hero-emblem-icon { font-size: 1.3rem; }
             .countdown-timer { gap: 0.4rem; }
-            .countdown-unit { min-width: 54px; padding: 0.45rem 0.5rem; }
-            .countdown-number { font-size: 1.2rem; }
-            .filter-section, .timeline-section, .stats-section, .conmem-section { padding-left: 1rem; padding-right: 1rem; }
+            .countdown-unit { min-width: 56px; padding: 0.5rem 0.55rem; }
+            .countdown-number { font-size: 1.3rem; }
+            .filter-section, .timeline-section, .stats-section, .conmem-section {
+                padding-left: 1rem; padding-right: 1rem;
+            }
             .stats-grid { gap: 1rem; }
             .event-card:hover { transform: none; box-shadow: none; }
             .event-card:hover::after { opacity: 0; }
-            .header-center { font-size: 0.65rem; }
-            .header-badge { font-size: 0.62rem; padding: 0.25rem 0.6rem; }
+            .event-card .card-shine { display: none; }
+            .header-center { font-size: 0.62rem; }
+            .header-badge { font-size: 0.6rem; padding: 0.25rem 0.6rem; }
             .stat-card { min-width: 140px; }
             .modal-info-grid { grid-template-columns: 1fr; }
-            .modal-event-title { font-size: 1.1rem; }
-            .modal-body { padding: 0 1rem 1.5rem; }
-            .gallery-grid { gap: 0.35rem; }
+            .modal-event-title { font-size: 1.15rem; }
+            .modal-body { padding: 0 1rem 2rem; }
+            .gallery-grid { gap: 0.4rem; }
+            .agenda-border { border-radius: 1.5rem; }
+            .agenda-inner { border-radius: calc(1.5rem - 2px); }
+            .modal-panel { border-radius: 1.5rem 1.5rem 0 0; }
+            .progress-ring-wrapper { width: 100px; height: 100px; }
+            .progress-percent { font-size: 1.3rem; }
         }
 
         @media (min-width: 700px) {
             .modal-overlay { align-items: center; }
             .modal-panel {
-                border-radius: 1.8rem;
+                border-radius: 2rem;
                 max-height: 85vh;
-                transform: translateY(30px) scale(0.97);
+                transform: translateY(30px) scale(0.96);
+                box-shadow: 0 25px 80px rgba(0,0,0,0.5);
             }
             .modal-overlay.active .modal-panel { transform: translateY(0) scale(1); }
-            .modal-handle { padding: 0.6rem 1.5rem 0; }
+            .modal-handle { padding: 0.7rem 1.6rem 0; }
             .modal-handle-bar { display: none; }
             .modal-close-btn { position: relative; }
         }
     </style>
 </head>
 <body>
+    <!-- PANTALLA DE CARGA -->
+    <div class="loader-screen" id="loader" aria-hidden="true">
+        <div class="loader-emblem">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-center-icon"><i class="fa-solid fa-trophy"></i></div>
+        </div>
+        <div class="loader-text">Cargando Agenda</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill" id="loader-fill"></div>
+        </div>
+    </div>
+
+    <!-- CURSOR PERSONALIZADO -->
+    <div class="custom-cursor" id="cursor" aria-hidden="true"></div>
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+    <!-- FONDOS AMBIENTALES -->
     <div class="ambient-glow glow-1" aria-hidden="true"></div>
     <div class="ambient-glow glow-2" aria-hidden="true"></div>
     <div class="ambient-glow glow-3" aria-hidden="true"></div>
+    <div class="ambient-glow glow-4" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="noise-overlay" aria-hidden="true"></div>
     <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
-    <!-- Modal -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="Detalle del evento">
         <div class="modal-backdrop" id="modal-backdrop"></div>
         <div class="modal-panel" id="modal-panel">
@@ -1186,13 +1652,20 @@
         </div>
     </div>
 
-    <!-- Lightbox -->
+    <!-- LIGHTBOX -->
     <div class="lightbox-overlay" id="lightbox" aria-label="Imagen ampliada">
         <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar imagen"><i class="fa-solid fa-xmark"></i></button>
         <img id="lightbox-img" src="" alt="Foto ampliada">
         <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
 
+    <!-- TOAST -->
+    <div class="toast" id="toast"><i class="fa-solid fa-circle-info"></i><span id="toast-text"></span></div>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top-btn" id="scroll-top" aria-label="Volver arriba"><i class="fa-solid fa-chevron-up"></i></button>
+
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="agenda-wrapper">
         <div class="agenda-border">
             <div class="agenda-inner">
@@ -1203,6 +1676,12 @@
                 </header>
 
                 <section class="hero">
+                    <div class="hero-emblem" aria-hidden="true">
+                        <div class="hero-emblem-ring"></div>
+                        <div class="hero-emblem-ring"></div>
+                        <div class="hero-emblem-ring"></div>
+                        <div class="hero-emblem-icon"><i class="fa-solid fa-trophy"></i></div>
+                    </div>
                     <div class="hero-flag" aria-hidden="true">
                         <span style="background:#3a7bd5;"></span>
                         <span style="background:#fff;"></span>
@@ -1212,7 +1691,7 @@
                     <p class="hero-subtitle">Calendario de Actividades &middot; <strong>Marzo - Mayo 2026</strong></p>
                     <div class="countdown-section">
                         <div class="countdown-label"><i class="fa-solid fa-clock"></i> PR&Oacute;XIMO EVENTO</div>
-                        <div class="countdown-next">Torneo de F&uacute;tbol Infantil</div>
+                        <div class="countdown-next" id="countdown-event-name">Torneo Rel&aacute;mpago de F&uacute;tbol Juvenil</div>
                         <div class="countdown-timer" aria-label="Cuenta regresiva al pr&oacute;ximo evento">
                             <div class="countdown-unit">
                                 <div class="countdown-number" id="cd-days">---</div>
@@ -1241,9 +1720,9 @@
 
                 <nav class="filter-section" aria-label="Filtrar eventos">
                     <div class="filter-tabs" role="tablist">
-                        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">Todas (17)</button>
-                        <button class="filter-tab" data-filter="realizada" role="tab" aria-selected="false">Realizadas (11)</button>
-                        <button class="filter-tab" data-filter="pendiente" role="tab" aria-selected="false">En Espera (6)</button>
+                        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">Todas (16)</button>
+                        <button class="filter-tab" data-filter="realizada" role="tab" aria-selected="false">Realizadas (14)</button>
+                        <button class="filter-tab" data-filter="pendiente" role="tab" aria-selected="false">En Espera (2)</button>
                     </div>
                 </nav>
 
@@ -1261,6 +1740,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="1">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 15 Mar &middot; 10:10 AM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1274,6 +1754,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="2">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 22 Mar &middot; 10:00 AM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1288,6 +1769,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="3">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Lun 23 Mar</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1302,6 +1784,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="4">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 27 Mar &middot; 4:00 PM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1317,6 +1800,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="5">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1331,6 +1815,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="6">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1345,6 +1830,7 @@
                             <div class="timeline-item" data-status="realizada" data-id="7">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 29 Mar &middot; 10:10 AM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1364,15 +1850,14 @@
                             <div class="month-icon abril"><i class="fa-solid fa-calendar-days"></i></div>
                             <div>
                                 <div class="month-title">Abril 2026</div>
-                                <div class="month-count">4 realizadas &middot; 5 en espera</div>
+                                <div class="month-count">7 actividades realizadas</div>
                             </div>
                         </div>
-                        <div class="timeline mixed">
-
-                            <!-- Festival Acuático — REALIZADA -->
+                        <div class="timeline">
                             <div class="timeline-item" data-status="realizada" data-id="8">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 3 Abr &middot; 10:00 AM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1384,11 +1869,10 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Fútbol Juvenil — REALIZADA -->
                             <div class="timeline-item" data-status="realizada" data-id="9">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Mi&eacute; 9 Abr &middot; 3:00 PM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1400,11 +1884,10 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Ping Pong 16 Abr — REALIZADA -->
                             <div class="timeline-item" data-status="realizada" data-id="14">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 16 Abr &middot; 2:00 PM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1416,11 +1899,10 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Boxeo — REALIZADA -->
                             <div class="timeline-item" data-status="realizada" data-id="11">
                                 <div class="timeline-dot realizado"></div>
                                 <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 20 Abr &middot; 7:00 PM</span>
                                         <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
@@ -1432,30 +1914,13 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Fútbol Infantil 26 Abr -->
-                            <div class="timeline-item" data-status="pendiente" data-id="13">
-                                <div class="timeline-dot pendiente"></div>
-                                <article class="event-card">
-                                    <div class="event-top">
-                                        <span class="event-date"><i class="fa-regular fa-clock"></i> S&aacute;b 26 Abr &middot; 8:30 AM</span>
-                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
-                                    </div>
-                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Torneo de F&uacute;tbol Infantil</div>
-                                    <div class="event-details">
-                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha del Parque Municipal</span>
-                                        <span class="event-detail highlight"><i class="fa-solid fa-star"></i> Juan Alberto Bland&oacute;n "Froyl&aacute;n"</span>
-                                    </div>
-                                </article>
-                            </div>
-
-                            <!-- Continuidad Liga Rural 26 Abr -->
-                            <div class="timeline-item" data-status="pendiente" data-id="15">
-                                <div class="timeline-dot pendiente"></div>
-                                <article class="event-card">
+                            <div class="timeline-item" data-status="realizada" data-id="15">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 26 Abr &middot; 9:00 AM</span>
-                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
                                     </div>
                                     <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Continuidad de la Liga Rural de F&uacute;tbol Campo "Leonel Rugama"</div>
                                     <div class="event-details">
@@ -1464,14 +1929,13 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Final Béisbol 26 Abr -->
-                            <div class="timeline-item" data-status="pendiente" data-id="16">
-                                <div class="timeline-dot pendiente"></div>
-                                <article class="event-card">
+                            <div class="timeline-item" data-status="realizada" data-id="16">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Dom 26 Abr &middot; 9:00 AM</span>
-                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
                                     </div>
                                     <div class="event-title"><i class="fa-solid fa-baseball sport-icon"></i>Final de B&eacute;isbol (Liga Mayor A)</div>
                                     <div class="event-details">
@@ -1480,14 +1944,13 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Voleibol Mixto 30 Abr -->
-                            <div class="timeline-item" data-status="pendiente" data-id="17">
-                                <div class="timeline-dot pendiente"></div>
-                                <article class="event-card">
+                            <div class="timeline-item" data-status="realizada" data-id="17">
+                                <div class="timeline-dot realizado"></div>
+                                <article class="event-card realizada">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 30 Abr &middot; 2:00 PM</span>
-                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                        <span class="event-status status-done"><i class="fa-solid fa-check"></i> Realizada</span>
                                     </div>
                                     <div class="event-title"><i class="fa-solid fa-volleyball sport-icon"></i>Torneo de Voleibol Mixto "Legado del Comandante"</div>
                                     <div class="event-details">
@@ -1497,23 +1960,6 @@
                                     </div>
                                 </article>
                             </div>
-
-                            <!-- Exhibición Boxística 30 Abr -->
-                            <div class="timeline-item" data-status="pendiente" data-id="18">
-                                <div class="timeline-dot pendiente"></div>
-                                <article class="event-card">
-                                    <div class="event-top">
-                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Jue 30 Abr &middot; 4:00 PM</span>
-                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
-                                    </div>
-                                    <div class="event-title"><i class="fa-solid fa-hand-fist sport-icon"></i>Exhibici&oacute;n Box&iacute;stica con J&oacute;venes del Municipio</div>
-                                    <div class="event-details">
-                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Cancha Los Laureles</span>
-                                        <span class="event-detail red-highlight"><i class="fa-solid fa-ribbon"></i> Comandante Tom&aacute;s Borge</span>
-                                    </div>
-                                </article>
-                            </div>
-
                         </div>
                     </div>
 
@@ -1523,15 +1969,29 @@
                             <div class="month-icon mayo"><i class="fa-solid fa-calendar-plus"></i></div>
                             <div>
                                 <div class="month-title">Mayo 2026</div>
-                                <div class="month-count">1 actividad en espera</div>
+                                <div class="month-count">2 actividades en espera</div>
                             </div>
                         </div>
                         <div class="timeline pending">
-
-                            <!-- Copa Sandino — REPROGRAMADA AL 15 DE MAYO -->
+                            <div class="timeline-item" data-status="pendiente" data-id="19">
+                                <div class="timeline-dot pendiente"></div>
+                                <article class="event-card">
+                                    <div class="card-shine"></div>
+                                    <div class="event-top">
+                                        <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 8 May &middot; 4:00 PM</span>
+                                        <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
+                                    </div>
+                                    <div class="event-title"><i class="fa-solid fa-futbol sport-icon"></i>Torneo Rel&aacute;mpago de F&uacute;tbol Juvenil</div>
+                                    <div class="event-details">
+                                        <span class="event-detail"><i class="fa-solid fa-location-dot"></i> Campo de F&uacute;tbol Municipal</span>
+                                        <span class="event-detail highlight"><i class="fa-solid fa-calendar-week"></i> Semana del 4 al 10 de mayo</span>
+                                    </div>
+                                </article>
+                            </div>
                             <div class="timeline-item" data-status="pendiente" data-id="10">
                                 <div class="timeline-dot pendiente"></div>
                                 <article class="event-card">
+                                    <div class="card-shine"></div>
                                     <div class="event-top">
                                         <span class="event-date"><i class="fa-regular fa-clock"></i> Vie 15 May &middot; 6:00 PM</span>
                                         <span class="event-status status-pending"><i class="fa-solid fa-hourglass-half"></i> En Espera</span>
@@ -1543,7 +2003,6 @@
                                     </div>
                                 </article>
                             </div>
-
                         </div>
                     </div>
                 </main>
@@ -1556,15 +2015,15 @@
                         </div>
                         <div class="stats-grid">
                             <div class="progress-ring-wrapper">
-                                <svg class="progress-ring" width="105" height="105" viewBox="0 0 105 105">
+                                <svg class="progress-ring" width="115" height="115" viewBox="0 0 115 115">
                                     <defs>
                                         <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                             <stop offset="0%" stop-color="#f5d060"/>
                                             <stop offset="100%" stop-color="#d4a517"/>
                                         </linearGradient>
                                     </defs>
-                                    <circle class="progress-ring-bg" cx="52.5" cy="52.5" r="40"/>
-                                    <circle class="progress-ring-fill" id="progress-fill" cx="52.5" cy="52.5" r="40"/>
+                                    <circle class="progress-ring-bg" cx="57.5" cy="57.5" r="44"/>
+                                    <circle class="progress-ring-fill" id="progress-fill" cx="57.5" cy="57.5" r="44"/>
                                 </svg>
                                 <div class="progress-center">
                                     <div class="progress-percent" id="progress-percent">0%</div>
@@ -1575,21 +2034,21 @@
                                 <div class="stat-card">
                                     <div class="stat-icon green"><i class="fa-solid fa-check"></i></div>
                                     <div class="stat-info">
-                                        <span class="stat-number" data-count="11">0</span>
+                                        <span class="stat-number" data-count="14">0</span>
                                         <span class="stat-text">Realizadas</span>
                                     </div>
                                 </div>
                                 <div class="stat-card">
                                     <div class="stat-icon orange"><i class="fa-solid fa-hourglass-half"></i></div>
                                     <div class="stat-info">
-                                        <span class="stat-number" data-count="6">0</span>
+                                        <span class="stat-number" data-count="2">0</span>
                                         <span class="stat-text">En Espera</span>
                                     </div>
                                 </div>
                                 <div class="stat-card">
                                     <div class="stat-icon navy"><i class="fa-solid fa-chart-simple"></i></div>
                                     <div class="stat-info">
-                                        <span class="stat-number" data-count="17">0</span>
+                                        <span class="stat-number" data-count="16">0</span>
                                         <span class="stat-text">Total</span>
                                     </div>
                                 </div>
@@ -1607,7 +2066,6 @@
                             <span class="conmem-chip">27 Mar &middot; Natalicio Leonel Rugama</span>
                             <span class="conmem-chip">20 Abr &middot; Natalicio Alexis Arg&uuml;ello</span>
                             <span class="conmem-chip">24 Abr &middot; Insurrecci&oacute;n Sandinista</span>
-                            <span class="conmem-chip">26 Abr &middot; Juan Alberto Bland&oacute;n</span>
                             <span class="conmem-chip">30 Abr &middot; Comandante Tom&aacute;s Borge</span>
                         </div>
                     </div>
@@ -1746,7 +2204,6 @@
                     { src: 'https://picsum.photos/seed/juvenil9c/800/450', caption: 'Momento del gol en uno de los partidos' }
                 ]
             },
-            /* Copa Sandino — REPROGRAMADA AL 15 DE MAYO, PENDIENTE */
             10: {
                 titulo: 'Inauguraci\u00f3n Liga F\u00fatbol Sala 6ta Edici\u00f3n "Copa Sandino"',
                 fecha: 'Viernes 15 de Mayo, 2026 \u00b7 6:00 PM',
@@ -1769,15 +2226,6 @@
                     { src: 'https://picsum.photos/seed/boxeo11c/800/450', caption: 'Premiaci\u00f3n a los ganadores' }
                 ]
             },
-            13: {
-                titulo: 'Torneo de F\u00fatbol Infantil',
-                fecha: 'S\u00e1bado 26 de Abril, 2026 \u00b7 8:30 AM',
-                lugar: 'Cancha del Parque Municipal',
-                deporte: 'F\u00fatbol',
-                status: 'pendiente',
-                descripcion: 'Torneo dedicado a la memoria de Juan Alberto Bland\u00f3n "Froyl\u00e1n", ca\u00eddo en combate en 1979 durante la lucha sandinista. Este evento infantil busca sembrar la semilla del deporte en los m\u00e1s peque\u00f1os, uniendo el juego con la memoria hist\u00f3rica para que las nuevas generaciones conozcan y honren a quienes entregaron su vida por la patria.',
-                fotos: []
-            },
             14: {
                 titulo: 'Torneo Rel\u00e1mpago de Ping Pong "Insurrecci\u00f3n de Abril"',
                 fecha: 'Jueves 16 de Abril, 2026 \u00b7 2:00 PM',
@@ -1796,184 +2244,390 @@
                 fecha: 'Domingo 26 de Abril, 2026 \u00b7 9:00 AM',
                 lugar: 'Cancha Las Ca\u00f1as',
                 deporte: 'F\u00fatbol Campo',
-                status: 'pendiente',
-                descripcion: 'Nueva jornada de la II Edici\u00f3n de la Liga Rural de F\u00fatbol Campo "Leonel Rugama". Los 8 equipos de las comunidades rurales del municipio vuelven a las canchas de Las Ca\u00f1as para continuar con la competencia que fortalece los lazos comunitarios a trav\u00e9s del deporte. Un espacio donde las comunidades se encuentran, compiten y comparten en un ambiente de sana rivalidad.',
-                fotos: []
+                status: 'realizada',
+                descripcion: 'Nueva jornada de la II Edici\u00f3n de la Liga Rural de F\u00fatbol Campo "Leonel Rugama". Los 8 equipos de las comunidades rurales del municipio volvieron a las canchas de Las Ca\u00f1as para continuar con la competencia que fortalece los lazos comunitarios a trav\u00e9s del deporte. Un espacio donde las comunidades se encuentran, compiten y comparten en un ambiente de sana rivalidad.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/rural15a/800/450', caption: 'Partido de la jornada de continuidad en Las Ca\u00f1as' },
+                    { src: 'https://picsum.photos/seed/rural15b/800/450', caption: 'Jugadores en acci\u00f3n durante el enfrentamiento' },
+                    { src: 'https://picsum.photos/seed/rural15c/800/450', caption: 'Comunidad acompa\u00f1ando desde la l\u00ednea lateral' }
+                ]
             },
             16: {
                 titulo: 'Final de B\u00e9isbol (Liga Mayor A)',
                 fecha: 'Domingo 26 de Abril, 2026 \u00b7 9:00 AM',
                 lugar: 'Estadio Municipal Carlos Rodr\u00edguez',
                 deporte: 'B\u00e9isbol',
-                status: 'pendiente',
-                descripcion: 'Gran final de la Liga Mayor A de b\u00e9isbol del departamento de Estel\u00ed. El Estadio Municipal Carlos Rodr\u00edguez ser\u00e1 el escenario donde se defina el campe\u00f3n de esta temporada. Se espera una gran asistencia de la afici\u00f3n limayense para apoyar al equipo local en el partido m\u00e1s importante del campeonato. Un momento de gran importancia para el deporte departamental.',
-                fotos: []
+                status: 'realizada',
+                descripcion: 'Gran final de la Liga Mayor A de b\u00e9isbol del departamento de Estel\u00ed. El Estadio Municipal Carlos Rodr\u00edguez fue el escenario donde se defini\u00f3 el campe\u00f3n de esta temporada. La afici\u00f3n limayense acompa\u00f1\u00f3 masivamente al equipo local en el partido m\u00e1s importante del campeonato. Un momento de gran importancia para el deporte departamental que dej\u00f3 recuerdos imborrables en la afici\u00f3n.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/final16a/800/450', caption: 'Estadio Carlos Rodr\u00edguez lleno para la gran final' },
+                    { src: 'https://picsum.photos/seed/final16b/800/450', caption: 'Lanzador ejecutando en la final del campeonato' },
+                    { src: 'https://picsum.photos/seed/final16c/800/450', caption: 'Afici\u00f3n celebrando durante la gran final' }
+                ]
             },
             17: {
                 titulo: 'Torneo de Voleibol Mixto "Legado del Comandante"',
                 fecha: 'Jueves 30 de Abril, 2026 \u00b7 2:00 PM',
                 lugar: 'Cancha del Instituto Nacional Rub\u00e9n Dar\u00edo',
                 deporte: 'Voleibol',
-                status: 'pendiente',
+                status: 'realizada',
                 conmemoracion: 'Aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge (30 de abril)',
-                descripcion: 'Torneo de voleibol mixto realizado en conmemoraci\u00f3n del aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge, fundador del Ministerio del Interior y figura clave de la Revoluci\u00f3n Popular Sandinista. Participan estudiantes del turno de la tarde del Instituto Nacional Rub\u00e9n Dar\u00edo, quienes a trav\u00e9s del deporte honran el legado de quien dedic\u00f3 su vida a la construcci\u00f3n de la nueva Nicaragua.',
-                fotos: []
+                descripcion: 'Torneo de voleibol mixto realizado en conmemoraci\u00f3n del aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge, fundador del Ministerio del Interior y figura clave de la Revoluci\u00f3n Popular Sandinista. Participaron estudiantes del turno de la tarde del Instituto Nacional Rub\u00e9n Dar\u00edo, quienes a trav\u00e9s del deporte honraron el legado de quien dedic\u00f3 su vida a la construcci\u00f3n de la nueva Nicaragua.',
+                fotos: [
+                    { src: 'https://picsum.photos/seed/volei17a/800/450', caption: 'Estudiantes en acci\u00f3n durante el torneo de voleibol' },
+                    { src: 'https://picsum.photos/seed/volei17b/800/450', caption: 'Vista de la cancha del INRD durante el evento' },
+                    { src: 'https://picsum.photos/seed/volei17c/800/450', caption: 'Participantes del turno tarde en el torneo mixto' }
+                ]
             },
-            18: {
-                titulo: 'Exhibici\u00f3n Box\u00edstica con J\u00f3venes del Municipio',
-                fecha: 'Jueves 30 de Abril, 2026 \u00b7 4:00 PM',
-                lugar: 'Cancha Los Laureles',
-                deporte: 'Boxeo',
+            19: {
+                titulo: 'Torneo Rel\u00e1mpago de F\u00fatbol Juvenil',
+                fecha: 'Viernes 8 de Mayo, 2026 \u00b7 4:00 PM',
+                lugar: 'Campo de F\u00fatbol Municipal',
+                deporte: 'F\u00fatbol',
                 status: 'pendiente',
-                conmemoracion: 'Aniversario del paso a la inmortalidad del Comandante Tom\u00e1s Borge (30 de abril)',
-                descripcion: 'Exhibici\u00f3n box\u00edstica con la participaci\u00f3n de j\u00f3venes del municipio de San Juan de Limay, programada en el marco de las actividades de conmemoraci\u00f3n del Comandante Tom\u00e1s Borge. El evento busca proyectar el talento pugil\u00edstico de la juventud limayense en un nuevo espacio deportivo: la Cancha Los Laureles, fortaleciendo la presencia del boxeo en las comunidades.',
+                descripcion: 'Torneo rel\u00e1mpago de f\u00fatbol juvenil programado para la semana del 4 al 10 de mayo como parte de las actividades del MDAA San Juan de Limay. Un espacio para que la juventud limayense se exprese a trav\u00e9s del deporte, promoviendo la competencia sana, el trabajo en equipo y la integraci\u00f3n comunitaria en el Campo de F\u00fatbol Municipal.',
                 fotos: []
             }
         };
 
         /* ============================================
-           PARTÍCULAS DORADAS
+           PANTALLA DE CARGA
            ============================================ */
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+        const loaderFill = document.getElementById('loader-fill');
+        const loaderScreen = document.getElementById('loader');
+        let loaderProgress = 0;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor(randomY) { this.reset(randomY); }
-            reset(randomY) {
-                this.x = Math.random() * canvas.width;
-                this.y = randomY ? Math.random() * canvas.height : canvas.height + Math.random() * 60;
-                this.size = Math.random() * 1.8 + 0.5;
-                this.speedY = -(Math.random() * 0.25 + 0.08);
-                this.speedX = (Math.random() - 0.5) * 0.15;
-                this.opacity = Math.random() * 0.35 + 0.08;
-                this.osc = Math.random() * Math.PI * 2;
-                this.oscSpeed = Math.random() * 0.015 + 0.005;
-                this.gold = Math.random() > 0.25;
-            }
-            update() {
-                this.osc += this.oscSpeed;
-                this.x += this.speedX + Math.sin(this.osc) * 0.25;
-                this.y += this.speedY;
-                if (this.y < -10) this.reset(false);
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2);
-                ctx.fillStyle = this.gold
-                    ? 'rgba(212,165,23,' + this.opacity + ')'
-                    : 'rgba(255,255,255,' + (this.opacity * 0.5) + ')';
-                ctx.fill();
+        function advanceLoader() {
+            loaderProgress += Math.random() * 18 + 5;
+            if (loaderProgress > 100) loaderProgress = 100;
+            loaderFill.style.width = loaderProgress + '%';
+            if (loaderProgress < 100) {
+                setTimeout(advanceLoader, 150 + Math.random() * 200);
+            } else {
+                setTimeout(() => {
+                    loaderScreen.classList.add('hidden');
+                    initPage();
+                }, 400);
             }
         }
-
-        const count = Math.min(55, Math.floor(window.innerWidth / 18));
-        for (let i = 0; i < count; i++) particles.push(new Particle(true));
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const p of particles) { p.update(); p.draw(); }
-            requestAnimationFrame(animateParticles);
-        }
-
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) animateParticles();
+        advanceLoader();
 
         /* ============================================
-           CUENTA REGRESIVA — 26 de abril, 8:30 AM
+           INICIALIZACIÓN DE LA PÁGINA
            ============================================ */
-        const targetDate = new Date('2026-04-26T08:30:00-06:00').getTime();
-
-        function updateCountdown() {
-            const diff = targetDate - Date.now();
-            if (diff <= 0) {
-                document.getElementById('cd-days').textContent = '0';
-                document.getElementById('cd-hours').textContent = '00';
-                document.getElementById('cd-mins').textContent = '00';
-                document.getElementById('cd-secs').textContent = '00';
-                return;
-            }
-            document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
-            document.getElementById('cd-hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
-            document.getElementById('cd-mins').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-            document.getElementById('cd-secs').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        function initPage() {
+            initParticles();
+            initCursor();
+            initCardShine();
+            initScrollReveal();
+            initFilters();
+            initModal();
+            initLightbox();
+            initCountdown();
+            initStats();
+            initScrollTop();
+            showToast('Agenda actualizada con 16 actividades');
         }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+
+        /* ============================================
+           CURSOR PERSONALIZADO
+           ============================================ */
+        function initCursor() {
+            if (window.innerWidth <= 768) return;
+
+            const cursor = document.getElementById('cursor');
+            const dot = document.getElementById('cursor-dot');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            let dotX = 0, dotY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursor.classList.add('visible');
+                dot.classList.add('visible');
+            });
+
+            document.addEventListener('mouseleave', () => {
+                cursor.classList.remove('visible');
+                dot.classList.remove('visible');
+            });
+
+            document.addEventListener('mousedown', () => cursor.classList.add('click'));
+            document.addEventListener('mouseup', () => cursor.classList.remove('click'));
+
+            /* Elementos interactivos */
+            const hoverTargets = 'a, button, .event-card, .gallery-item, .filter-tab, .conmem-chip, .header-badge, .monitor-chip, .scroll-top-btn';
+            document.querySelectorAll(hoverTargets).forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+
+            /* Suavizado del cursor */
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.12;
+                cursorY += (mouseY - cursorY) * 0.12;
+                dotX += (mouseX - dotX) * 0.25;
+                dotY += (mouseY - dotY) * 0.25;
+
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                dot.style.left = dotX + 'px';
+                dot.style.top = dotY + 'px';
+
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        /* ============================================
+           EFECTO DE BRILLO EN TARJETAS (RATÓN)
+           ============================================ */
+        function initCardShine() {
+            if (window.innerWidth <= 768) return;
+
+            document.querySelectorAll('.event-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', x + 'px');
+                    card.style.setProperty('--mouse-y', y + 'px');
+
+                    /* Efecto 3D sutil */
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 25;
+                    const rotateY = (centerX - x) / 25;
+                    card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateX(5px)';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        }
+
+        /* ============================================
+           PARTÍCULAS CON CONEXIONES
+           ============================================ */
+        let particles = [];
+
+        function initParticles() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            class Particle {
+                constructor(randomY) { this.reset(randomY); }
+                reset(randomY) {
+                    this.x = Math.random() * canvas.width;
+                    this.y = randomY ? Math.random() * canvas.height : canvas.height + Math.random() * 60;
+                    this.size = Math.random() * 1.6 + 0.4;
+                    this.speedY = -(Math.random() * 0.2 + 0.06);
+                    this.speedX = (Math.random() - 0.5) * 0.12;
+                    this.opacity = Math.random() * 0.3 + 0.06;
+                    this.osc = Math.random() * Math.PI * 2;
+                    this.oscSpeed = Math.random() * 0.012 + 0.004;
+                    this.gold = Math.random() > 0.2;
+                }
+                update() {
+                    this.osc += this.oscSpeed;
+                    this.x += this.speedX + Math.sin(this.osc) * 0.2;
+                    this.y += this.speedY;
+                    if (this.y < -10) this.reset(false);
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2);
+                    ctx.fillStyle = this.gold
+                        ? 'rgba(212,165,23,' + this.opacity + ')'
+                        : 'rgba(180,200,220,' + (this.opacity * 0.4) + ')';
+                    ctx.fill();
+                }
+            }
+
+            const count = Math.min(65, Math.floor(window.innerWidth / 16));
+            for (let i = 0; i < count; i++) particles.push(new Particle(true));
+
+            function drawConnections() {
+                const maxDist = 120;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < maxDist) {
+                            const alpha = (1 - dist / maxDist) * 0.06;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = 'rgba(212,165,23,' + alpha + ')';
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (const p of particles) { p.update(); p.draw(); }
+                drawConnections();
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        /* ============================================
+           CUENTA REGRESIVA
+           ============================================ */
+        function initCountdown() {
+            const targetDate = new Date('2026-05-08T16:00:00-06:00').getTime();
+
+            function update() {
+                const diff = targetDate - Date.now();
+                if (diff <= 0) {
+                    document.getElementById('cd-days').textContent = '0';
+                    document.getElementById('cd-hours').textContent = '00';
+                    document.getElementById('cd-mins').textContent = '00';
+                    document.getElementById('cd-secs').textContent = '00';
+                    return;
+                }
+                document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
+                document.getElementById('cd-hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+                document.getElementById('cd-mins').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+                document.getElementById('cd-secs').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            }
+            update();
+            setInterval(update, 1000);
+        }
 
         /* ============================================
            REVELACIÓN AL SCROLL
            ============================================ */
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const siblings = entry.target.parentElement.children;
-                    let idx = 0;
-                    for (let i = 0; i < siblings.length; i++) {
-                        if (siblings[i] === entry.target) { idx = i; break; }
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const siblings = entry.target.parentElement.children;
+                        let idx = 0;
+                        for (let i = 0; i < siblings.length; i++) {
+                            if (siblings[i] === entry.target) { idx = i; break; }
+                        }
+                        setTimeout(() => entry.target.classList.add('visible'), idx * 90);
+                        observer.unobserve(entry.target);
                     }
-                    setTimeout(() => entry.target.classList.add('visible'), idx * 70);
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+                });
+            }, { threshold: 0.06, rootMargin: '0px 0px -15px 0px' });
 
-        document.querySelectorAll('.timeline-item').forEach(el => revealObserver.observe(el));
+            document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+        }
 
         /* ============================================
            FILTROS
            ============================================ */
-        const tabs = document.querySelectorAll('.filter-tab');
-        const monthBlocks = document.querySelectorAll('.month-block');
+        function initFilters() {
+            const tabs = document.querySelectorAll('.filter-tab');
+            const monthBlocks = document.querySelectorAll('.month-block');
+            const filterLabels = { all: 'Todas (16)', realizada: 'Realizadas (14)', pendiente: 'En Espera (2)' };
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
-                tab.classList.add('active');
-                tab.setAttribute('aria-selected', 'true');
-                const filter = tab.dataset.filter;
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+                    const filter = tab.dataset.filter;
 
-                document.querySelectorAll('.timeline-item').forEach(item => {
-                    const match = filter === 'all' || item.dataset.status === filter;
-                    if (match) {
-                        item.classList.remove('hidden-event');
-                        item.classList.remove('visible');
-                        requestAnimationFrame(() => requestAnimationFrame(() => item.classList.add('visible')));
-                    } else {
-                        item.classList.add('hidden-event');
-                    }
-                });
+                    document.querySelectorAll('.timeline-item').forEach(item => {
+                        const match = filter === 'all' || item.dataset.status === filter;
+                        if (match) {
+                            item.classList.remove('hidden-event');
+                            item.classList.remove('visible');
+                            requestAnimationFrame(() => requestAnimationFrame(() => item.classList.add('visible')));
+                        } else {
+                            item.classList.add('hidden-event');
+                        }
+                    });
 
-                monthBlocks.forEach(block => {
-                    const visibles = block.querySelectorAll('.timeline-item:not(.hidden-event)');
-                    block.style.display = visibles.length > 0 ? '' : 'none';
+                    monthBlocks.forEach(block => {
+                        const visibles = block.querySelectorAll('.timeline-item:not(.hidden-event)');
+                        block.style.display = visibles.length > 0 ? '' : 'none';
+                    });
+
+                    showToast('Mostrando: ' + filterLabels[filter]);
                 });
             });
-        });
+        }
 
         /* ============================================
-           MODAL DE DETALLE
+           MODAL
            ============================================ */
-        const modal = document.getElementById('modal');
-        const modalPanel = document.getElementById('modal-panel');
-        const modalBody = document.getElementById('modal-body');
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        const modalClose = document.getElementById('modal-close');
-        let lastScrollY = 0;
+        let modalInstance = {};
+
+        function initModal() {
+            const modal = document.getElementById('modal');
+            const modalPanel = document.getElementById('modal-panel');
+            const modalBody = document.getElementById('modal-body');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalClose = document.getElementById('modal-close');
+            modalInstance = { modal, modalPanel, modalBody, modalBackdrop, modalClose, lastScrollY: 0 };
+
+            modalClose.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (document.getElementById('lightbox').classList.contains('active')) closeLightbox();
+                    else if (modal.classList.contains('active')) closeModal();
+                }
+            });
+
+            /* Swipe para cerrar en móvil */
+            let touchStartY = 0, touchCurrentY = 0, isSwiping = false;
+            modalPanel.addEventListener('touchstart', (e) => {
+                if (modalPanel.scrollTop <= 0) { touchStartY = e.touches[0].clientY; isSwiping = true; }
+            }, { passive: true });
+            modalPanel.addEventListener('touchmove', (e) => {
+                if (!isSwiping) return;
+                touchCurrentY = e.touches[0].clientY;
+                const diff = touchCurrentY - touchStartY;
+                if (diff > 0 && modalPanel.scrollTop <= 0) modalPanel.style.transform = 'translateY(' + diff + 'px)';
+            }, { passive: true });
+            modalPanel.addEventListener('touchend', () => {
+                if (!isSwiping) return;
+                isSwiping = false;
+                const diff = touchCurrentY - touchStartY;
+                if (diff > 100) closeModal();
+                modalPanel.style.transform = '';
+                touchStartY = 0; touchCurrentY = 0;
+            });
+
+            /* Click en tarjetas */
+            document.querySelectorAll('.event-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const item = card.closest('.timeline-item');
+                    if (item) openModal(item.dataset.id);
+                });
+            });
+        }
 
         function openModal(id) {
             const ev = eventosDB[id];
             if (!ev) return;
+            const { modal, modalPanel, modalBody, modalBackdrop } = modalInstance;
 
-            lastScrollY = window.scrollY;
+            modalInstance.lastScrollY = window.scrollY;
             document.body.style.position = 'fixed';
-            document.body.style.top = '-' + lastScrollY + 'px';
+            document.body.style.top = '-' + modalInstance.lastScrollY + 'px';
             document.body.style.width = '100%';
 
             const isRealizada = ev.status === 'realizada';
@@ -1984,7 +2638,7 @@
             let conmemHTML = '';
             if (ev.conmemoracion) {
                 conmemHTML =
-                    '<div class="modal-desc-section" style="background:rgba(214,48,49,0.05);border:1px solid rgba(214,48,49,0.12);border-radius:1rem;padding:1rem 1.2rem;">' +
+                    '<div class="modal-desc-section" style="background:rgba(214,48,49,0.04);border:1px solid rgba(214,48,49,0.1);border-radius:1.1rem;padding:1.1rem 1.3rem;">' +
                         '<div class="modal-section-title" style="color:#e07070;"><i class="fa-solid fa-ribbon" style="color:var(--red);"></i> Conmemoraci\u00f3n</div>' +
                         '<p class="modal-desc-text" style="color:#d07070;font-weight:600;">' + ev.conmemoracion + '</p>' +
                     '</div>';
@@ -2036,101 +2690,59 @@
                         openLightbox(item.dataset.src, item.dataset.caption);
                     });
                 });
-            }, 50);
+            }, 60);
         }
 
         function closeModal() {
+            const { modal, modalPanel } = modalInstance;
             modal.classList.remove('active');
             document.body.style.position = '';
             document.body.style.top = '';
             document.body.style.width = '';
-            window.scrollTo(0, lastScrollY);
+            window.scrollTo(0, modalInstance.lastScrollY);
         }
-
-        modalClose.addEventListener('click', closeModal);
-        modalBackdrop.addEventListener('click', closeModal);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (lightbox.classList.contains('active')) closeLightbox();
-                else if (modal.classList.contains('active')) closeModal();
-            }
-        });
-
-        /* Swipe para cerrar en móvil */
-        let touchStartY = 0, touchCurrentY = 0, isSwiping = false;
-
-        modalPanel.addEventListener('touchstart', (e) => {
-            if (modalPanel.scrollTop <= 0) {
-                touchStartY = e.touches[0].clientY;
-                isSwiping = true;
-            }
-        }, { passive: true });
-
-        modalPanel.addEventListener('touchmove', (e) => {
-            if (!isSwiping) return;
-            touchCurrentY = e.touches[0].clientY;
-            const diff = touchCurrentY - touchStartY;
-            if (diff > 0 && modalPanel.scrollTop <= 0) {
-                modalPanel.style.transform = 'translateY(' + diff + 'px)';
-            }
-        }, { passive: true });
-
-        modalPanel.addEventListener('touchend', () => {
-            if (!isSwiping) return;
-            isSwiping = false;
-            const diff = touchCurrentY - touchStartY;
-            if (diff > 100) closeModal();
-            modalPanel.style.transform = '';
-            touchStartY = 0;
-            touchCurrentY = 0;
-        });
-
-        document.querySelectorAll('.event-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const item = card.closest('.timeline-item');
-                if (item) openModal(item.dataset.id);
-            });
-        });
 
         /* ============================================
            LIGHTBOX
            ============================================ */
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxCaption = document.getElementById('lightbox-caption');
-        const lightboxCloseBtn = document.getElementById('lightbox-close');
+        function initLightbox() {
+            document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+            document.getElementById('lightbox').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('lightbox')) closeLightbox();
+            });
+        }
 
         function openLightbox(src, caption) {
-            lightboxImg.src = src;
-            lightboxImg.alt = caption;
-            lightboxCaption.textContent = caption;
-            lightbox.classList.add('active');
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-img').alt = caption;
+            document.getElementById('lightbox-caption').textContent = caption;
+            lb.classList.add('active');
         }
 
         function closeLightbox() {
-            lightbox.classList.remove('active');
-            setTimeout(() => { lightboxImg.src = ''; }, 300);
+            const lb = document.getElementById('lightbox');
+            lb.classList.remove('active');
+            setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 350);
         }
 
-        lightboxCloseBtn.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-
         /* ============================================
-           ANIMACIÓN DE ESTADÍSTICAS (11/17 ≈ 65%)
+           ESTADÍSTICAS ANIMADAS
            ============================================ */
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { animateStats(); statsObserver.unobserve(entry.target); }
-            });
-        }, { threshold: 0.3 });
+        function initStats() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { animateStats(); observer.unobserve(entry.target); }
+                });
+            }, { threshold: 0.3 });
 
-        const statsCard = document.querySelector('.stats-card');
-        if (statsCard) statsObserver.observe(statsCard);
+            const card = document.querySelector('.stats-card');
+            if (card) observer.observe(card);
+        }
 
         function animateStats() {
-            const circumference = 2 * Math.PI * 40;
-            const percent = 11 / 17;
+            const circumference = 2 * Math.PI * 44;
+            const percent = 14 / 16;
             const offset = circumference - (percent * circumference);
 
             const fill = document.getElementById('progress-fill');
@@ -2139,9 +2751,9 @@
             fill.getBoundingClientRect();
             fill.style.strokeDashoffset = offset;
 
-            animateValue(document.getElementById('progress-percent'), 0, Math.round(percent * 100), 1600, '%');
+            animateValue(document.getElementById('progress-percent'), 0, Math.round(percent * 100), 1800, '%');
             document.querySelectorAll('.stat-number[data-count]').forEach(el => {
-                animateValue(el, 0, parseInt(el.dataset.count), 1200);
+                animateValue(el, 0, parseInt(el.dataset.count), 1400);
             });
         }
 
@@ -2150,11 +2762,37 @@
             const t0 = performance.now();
             function tick(now) {
                 const p = Math.min((now - t0) / duration, 1);
-                const ease = 1 - Math.pow(1 - p, 3);
+                const ease = 1 - Math.pow(1 - p, 4);
                 el.textContent = Math.round(start + (end - start) * ease) + suffix;
                 if (p < 1) requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
+        }
+
+        /* ============================================
+           TOAST
+           ============================================ */
+        let toastTimeout;
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = text;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        /* ============================================
+           SCROLL TO TOP
+           ============================================ */
+        function initScrollTop() {
+            const btn = document.getElementById('scroll-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 600) btn.classList.add('visible');
+                else btn.classList.remove('visible');
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         }
     </script>
 </body>
